@@ -102,6 +102,7 @@ export default function Challenges() {
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
   const [createFormData, setCreateFormData] = useState({
     title: '',
+    description: '',
     category: 'general',
     amount: 0 as number, // Allow decimals for ETH support
     challengeType: 'open', // 'open' or 'direct'
@@ -352,6 +353,7 @@ export default function Challenges() {
       const requestBody = new FormData();
       requestBody.append('opponentId', formData.challengeType === 'direct' ? preSelectedUser?.id : '');
       requestBody.append('title', formData.title);
+      requestBody.append('description', formData.description);
       requestBody.append('stakeAmount', formData.amount.toString());
       requestBody.append('paymentToken', selectedTokenAddress);
       requestBody.append('dueDate', formData.dueDate || '');
@@ -378,12 +380,24 @@ export default function Challenges() {
         body: requestBody,
       });
 
+      console.log(`📡 API Response Status: ${response.status} ${response.statusText}`);
+      console.log(`🔐 Auth header sent: ${token ? 'Yes' : 'No'}`);
+      
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to create challenge');
+        let errorMessage = `API Error ${response.status}`;
+        try {
+          const error = await response.json();
+          errorMessage = error.message || error.error || errorMessage;
+          console.error(`❌ API Error Details:`, error);
+        } catch (e) {
+          const text = await response.text();
+          console.error(`❌ API Error (non-JSON):`, text);
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
+      console.log(`✅ Challenge created successfully:`, data);
       return data;
     },
     onSuccess: () => {
@@ -393,7 +407,7 @@ export default function Challenges() {
       });
       queryClient.invalidateQueries({ queryKey: ["/api/challenges"] });
       setIsCreateDialogOpen(false);
-      setCreateFormData({ title: '', category: 'general', amount: 0, challengeType: 'open', opponentId: null, dueDate: '', paymentToken: 'ETH', side: 'YES', coverImage: null });
+      setCreateFormData({ title: '', description: '', category: 'general', amount: 0, challengeType: 'open', opponentId: null, dueDate: '', paymentToken: 'ETH', side: 'YES', coverImage: null });
       setCoverImagePreview(null);
       setPreSelectedUser(null);
     },
