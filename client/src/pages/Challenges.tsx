@@ -85,7 +85,7 @@ function ChallengeCardSkeleton() {
 }
 
 export default function Challenges() {
-  const { user } = useAuth();
+  const { user, getAccessToken } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
@@ -363,9 +363,18 @@ export default function Challenges() {
         requestBody.append('coverImage', formData.coverImage);
       }
 
+      // Get the Privy auth token
+      const token = await getAccessToken();
+      
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch('/api/challenges/create-p2p', {
         method: 'POST',
         credentials: 'include',
+        headers,
         body: requestBody,
       });
 

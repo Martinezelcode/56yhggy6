@@ -2,9 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "forge-std/Script.sol";
-import "./src/BantahPoints.sol";
 import "./src/ChallengeFactory.sol";
-import "./src/PointsEscrow.sol";
 
 contract Deploy is Script {
     function run() external {

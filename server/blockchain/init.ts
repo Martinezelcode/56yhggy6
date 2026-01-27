@@ -70,7 +70,6 @@ export async function initializeBlockchain(): Promise<void> {
     // Log contract addresses
     const addresses = client.getContractAddresses();
     console.log('📋 Contract Addresses:');
-    console.log(`   Points: ${addresses.points}`);
     console.log(`   Factory: ${addresses.challengeFactory}`);
     console.log(`   Escrow: ${addresses.pointsEscrow}`);
     console.log(`   USDC: ${addresses.usdc}`);

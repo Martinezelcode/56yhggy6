@@ -1,0 +1,25 @@
+
+🚀 Deploying Bantah On-Chain Challenge System (FIXED NONCE)
+📍 Network: Base Testnet Sepolia (Chain ID: 84532)
+👤 Deployer: 0xb843A2D0D4B9E628500d2E0f6f0382e063C14a95
+💰 Balance: 0.02955860712264587 ETH
+
+📌 Starting nonce: 132
+
+📋 Step 1/4: Deploying ChallengeEscrow.sol...
+✅ ChallengeEscrow deployed: 0x5838E60714f75d21f0f1E7f95a289Fd5ed3FD60d
+
+📋 Step 2/4: Deploying ChallengeFactory.sol...
+✅ ChallengeFactory deployed: 0xcc457aA3A7516bC817C6Cd0fB5B78e21aDc69390
+
+📋 Updating ChallengeEscrow factory reference...
+✅ Updated ChallengeEscrow to use ChallengeFactory
+
+✅ Deployment Complete!
+
+📄 Contract Addresses:
+   ChallengeFactory: 0xcc457aA3A7516bC817C6Cd0fB5B78e21aDc69390
+   ChallengeEscrow: 0x5838E60714f75d21f0f1E7f95a289Fd5ed3FD60d
+
+📝 Environment variables saved to .env.base-sepolia-new
+💡 Next: Copy variables to .env and restart backend

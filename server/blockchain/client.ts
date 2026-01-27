@@ -174,7 +174,6 @@ class BlockchainClient {
    */
   getContractAddresses() {
     return {
-      points: this.config.pointsContractAddress,
       challengeFactory: this.config.challengeFactoryAddress,
       pointsEscrow: this.config.pointsEscrowAddress,
       usdc: this.config.usdcAddress,
