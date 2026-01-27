@@ -255,7 +255,8 @@ router.post('/create-p2p', PrivyAuthMiddleware, upload.single('coverImage'), asy
     console.log(`\n💾 Creating ${type} challenge: creator=${userId}${!isOpenChallenge ? ` opponent=${opponentId}` : ' (open - any joiner)'}`);
 
     // Calculate creation points based on stake amount (50 + amount × 5, MAX 500)
-    const stakeAmountUSD = parseInt(stakeAmount); // USDC/USDT amounts are in USD equivalent
+    // stakeAmount comes as a decimal string (e.g., "0.000008" for ETH or "100" for USDC)
+    const stakeAmountUSD = parseFloat(stakeAmount); // Parse as float to handle decimals
     const creationPoints = Math.min(50 + (stakeAmountUSD * 5), 500);
     console.log(`🎁 Challenge creator will earn ${creationPoints} Bantah Points`);
 
@@ -280,13 +281,17 @@ router.post('/create-p2p', PrivyAuthMiddleware, upload.single('coverImage'), asy
     }
 
     // Create in database with blockchain status
+    // Determine decimals based on token type
+    const isNativeETH = paymentToken === '0x0000000000000000000000000000000000000000' || paymentToken?.toLowerCase() === '0x0000000000000000000000000000000000000000';
+    const tokenDecimals = isNativeETH ? 18 : 6; // ETH has 18 decimals, USDC/USDT have 6
+    
     const dbChallenge = await db
       .insert(challenges)
       .values({
         title,
         description,
         category: 'p2p',
-        amount: parseInt(stakeAmount) * 2,
+        amount: Math.floor(parseFloat(stakeAmount) * 2),
         status: transactionHash ? 'active' : 'pending',
         adminCreated: false,
         challenger: userId,
@@ -294,7 +299,7 @@ router.post('/create-p2p', PrivyAuthMiddleware, upload.single('coverImage'), asy
         challengerSide: side || 'YES', // Default to YES if not provided
         dueDate: parsedDueDate,
         paymentTokenAddress: paymentToken,
-        stakeAmountWei: BigInt(ethers.parseUnits(stakeAmount, 6).toString()),
+        stakeAmountWei: BigInt(ethers.parseUnits(stakeAmount, tokenDecimals).toString()),
         onChainStatus: transactionHash ? 'submitted' : 'pending',
         creatorTransactionHash: transactionHash || null,
         pointsAwarded: creationPoints,
