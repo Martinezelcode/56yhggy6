@@ -114,23 +114,7 @@ async function deploy() {
     await setChallengeFactoryTx.wait();
     console.log(`✅ Updated ChallengeEscrow to use ChallengeFactory\n`);
 
-    // Step 4: Deploy PointsEscrow
-    console.log("📋 Step 4/5: Deploying PointsEscrow.sol...");
-    const pointsEscrowBytecode = readBytecode("PointsEscrow");
-    const pointsEscrowABI = readABI("PointsEscrow");
-    
-    const pointsEscrowFactory = new ethers.ContractFactory(pointsEscrowABI, pointsEscrowBytecode, wallet);
-    const pointsEscrow = await pointsEscrowFactory.deploy(pointsAddress, factoryAddress);
-    await pointsEscrow.waitForDeployment();
-    const pointsEscrowAddress = await pointsEscrow.getAddress();
-    console.log(`✅ PointsEscrow deployed: ${pointsEscrowAddress}\n`);
-
-    // Step 5: Setup permissions
-    console.log("📋 Step 5/5: Setting up permissions...");
-    const pointsContractInstance = new ethers.Contract(pointsAddress, pointsABI, wallet);
-    const setManagerTx = await pointsContractInstance.setPointsManager(factoryAddress);
-    await setManagerTx.wait();
-    console.log(`✅ Set ChallengeFactory as PointsManager\n`);
+    // All setup complete (BantahPoints and PointsEscrow are now off-chain)
 
     // Output results
     const envContent = `# Bantah On-Chain Challenge System - Base Testnet Sepolia
@@ -143,7 +127,6 @@ VITE_CHAIN_ID=84532
 VITE_POINTS_CONTRACT_ADDRESS=${pointsAddress}
 VITE_CHALLENGE_FACTORY_ADDRESS=${factoryAddress}
 VITE_CHALLENGE_ESCROW_ADDRESS=${escrowAddress}
-VITE_POINTS_ESCROW_ADDRESS=${pointsEscrowAddress}
 
 # Tokens
 VITE_USDC_ADDRESS=0x833589fCD6eDb6E08f4c7C32D4f71b3566dA8860
@@ -164,8 +147,7 @@ VITE_ENTRY_POINT_ADDRESS=0x5FF137D4b0FDCD49DcA30c7B618636e2d6cf7c1e
     console.log("📄 Contract Addresses:");
     console.log(`   BantahPoints: ${pointsAddress}`);
     console.log(`   ChallengeFactory: ${factoryAddress}`);
-    console.log(`   ChallengeEscrow: ${escrowAddress}`);
-    console.log(`   PointsEscrow: ${pointsEscrowAddress}\n`);
+    console.log(`   ChallengeEscrow: ${escrowAddress}\n`);
     console.log("📝 Environment variables saved to .env.base-sepolia");
     console.log("💡 Next steps:");
     console.log("   1. Copy variables from .env.base-sepolia to root .env");

@@ -339,13 +339,8 @@ contract ChallengeFactory is ReentrancyGuard, Ownable {
             challengeId
         );
         
-        // Award BantahPoints to winner
-        pointsToken.awardPoints(
-            winner,
-            challenge.pointsReward,
-            challengeId,
-            "Challenge victory"
-        );
+        // NOTE: BantahPoints are awarded off-chain via API endpoint /api/admin/challenges/resolve
+        // Points are recorded in the database in the points_transactions table
         
         emit ChallengeResolved(
             challengeId,
