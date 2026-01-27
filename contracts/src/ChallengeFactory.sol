@@ -7,14 +7,15 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
-import "./BantahPoints.sol";
 import "./ChallengeEscrow.sol";
 
 /**
  * @title ChallengeFactory
  * @dev Creates and manages challenges with ERC20 token stakes
  * Handles both admin-created and P2P challenges
- * Separates stakes (USDC/USDT/ETH) from rewards (BantahPoints)
+ * 
+ * NOTE: BantahPoints rewards are now managed off-chain and recorded in the database.
+ * This contract only handles the stake management and token transfers.
  */
 contract ChallengeFactory is ReentrancyGuard, Ownable {
     using ECDSA for bytes32;
@@ -49,7 +50,6 @@ contract ChallengeFactory is ReentrancyGuard, Ownable {
     }
     
     // State variables
-    BantahPoints public pointsToken;
     ChallengeEscrow public stakeEscrow;
     address public admin;              // Authorized to sign resolutions
     address public platformFeeRecipient;  // Where platform fees go
@@ -108,17 +108,14 @@ contract ChallengeFactory is ReentrancyGuard, Ownable {
     
     // Constructor
     constructor(
-        address _pointsToken,
         address payable _stakeEscrow,
         address _admin,
         address _platformFeeRecipient
     ) Ownable(msg.sender) {
-        require(_pointsToken != address(0), "Invalid points token");
         require(_stakeEscrow != address(0), "Invalid escrow");
         require(_admin != address(0), "Invalid admin");
         require(_platformFeeRecipient != address(0), "Invalid fee recipient");
         
-        pointsToken = BantahPoints(_pointsToken);
         stakeEscrow = ChallengeEscrow(_stakeEscrow);
         admin = _admin;
         platformFeeRecipient = _platformFeeRecipient;

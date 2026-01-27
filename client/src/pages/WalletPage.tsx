@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { MobileNavigation } from "@/components/MobileNavigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
+import { useChain } from "@/hooks/useChain";
 import { usePrivy } from "@privy-io/react-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -85,16 +86,24 @@ export default function WalletPage() {
     return nextClaimSunday;
   };
 
-  // Fetch ETH price in USD
-  const { data: ethPrice } = useQuery({
-    queryKey: ['eth-price'],
+  // Map chain IDs to their native token IDs on CoinGecko
+  const CHAIN_TOKEN_MAP: Record<number, string> = {
+    84532: 'ethereum',    // Base Sepolia uses ETH
+    80002: 'polygon',     // Polygon Amoy uses POL (formerly MATIC)
+    421614: 'ethereum',   // Arbitrum Sepolia uses ETH
+  };
+
+  // Fetch native token price in USD based on current chain
+  const { data: tokenPrice } = useQuery({
+    queryKey: ['token-price', chainId],
     queryFn: async () => {
       try {
-        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+        const tokenId = CHAIN_TOKEN_MAP[chainId] || 'ethereum';
+        const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`);
         const data = await response.json();
-        return data.ethereum?.usd || 0;
+        return data[tokenId]?.usd || 0;
       } catch (err) {
-        console.warn('Failed to fetch ETH price:', err);
+        console.warn('Failed to fetch token price:', err);
         return 0;
       }
     },
@@ -323,8 +332,10 @@ export default function WalletPage() {
 
   // Choose a single primary token to show: prefer native, then USDC, then USDT, then BPTS
   // Fetch on-chain balances for the primary wallet (Privy or other provider)
+  const chainId = useChain((state) => state.currentChainId);
+  
   const { data: onchainBalances } = useQuery({
-    queryKey: ["/onchain/balances", primaryWallet?.address],
+    queryKey: ["/onchain/balances", primaryWallet?.address, chainId],
     enabled: !!primaryWallet?.address,
     queryFn: async () => {
       let providerSource = null;
@@ -352,7 +363,7 @@ export default function WalletPage() {
         return {};
       }
       
-      const balances = await getBalances(providerSource, primaryWallet.address);
+      const balances = await getBalances(providerSource, primaryWallet.address, chainId);
       // Override provider name with our detected type
       balances.providerName = providerType;
       
@@ -389,10 +400,10 @@ export default function WalletPage() {
 
   // Calculate USD value of wallet balance
   const getUsdValue = () => {
-    if (!ethPrice || !mergedPrimary?.nativeBalance) return null;
+    if (!tokenPrice || !mergedPrimary?.nativeBalance) return null;
     try {
-      const ethAmount = Number(mergedPrimary.nativeBalance) / Math.pow(10, 18);
-      const usdValue = ethAmount * ethPrice;
+      const tokenAmount = Number(mergedPrimary.nativeBalance) / Math.pow(10, 18);
+      const usdValue = tokenAmount * tokenPrice;
       return usdValue > 0 ? `$${usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : null;
     } catch {
       return null;

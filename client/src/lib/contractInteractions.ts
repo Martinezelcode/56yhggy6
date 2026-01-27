@@ -253,16 +253,24 @@ export async function getChallengeDetails(
  * Accepts either a Privy wallet object (with getEthereumProvider) or a window/provider object.
  * Returns raw smallest-unit strings for each token (e.g., wei, usdc 6-decimals integer).
  */
-export async function getBalances(providerOrPrivy: any, address: string): Promise<{ nativeBalance?: string; usdcBalance?: string; usdtBalance?: string; pointsBalance?: string; providerName?: string; chainId?: number }>{
+export async function getBalances(providerOrPrivy: any, address: string, chainId?: number): Promise<{ nativeBalance?: string; usdcBalance?: string; usdtBalance?: string; pointsBalance?: string; providerName?: string; chainId?: number }>{
   try {
     if (!providerOrPrivy || !address) return {};
 
     let provider: any = null;
     let providerDebugInfo = '';
     
-    // For EIP-1193 injected providers, use RPC URL instead to avoid account rejection
-    // Read-only operations don't need account access
-    const RPC_URL = (import.meta as any).env?.VITE_BASE_TESTNET_RPC || 'https://sepolia.base.org';
+    // Map chain IDs to their RPC URLs
+    const CHAIN_RPC_MAP: Record<number, string> = {
+      84532: (import.meta as any).env?.VITE_BASE_TESTNET_RPC || 'https://sepolia.base.org',
+      80002: (import.meta as any).env?.VITE_POLYGON_TESTNET_RPC || 'https://rpc-amoy.polygon.technology',
+      421614: (import.meta as any).env?.VITE_ARBITRUM_TESTNET_RPC || 'https://sepolia-rollup.arbitrum.io/rpc',
+    };
+
+    // Determine RPC URL based on chain ID
+    const RPC_URL = chainId && CHAIN_RPC_MAP[chainId] 
+      ? CHAIN_RPC_MAP[chainId]
+      : CHAIN_RPC_MAP[84532]; // Default to Base Sepolia
     
     if (providerOrPrivy.getEthereumProvider) {
       // Privy embedded wallet
@@ -272,7 +280,7 @@ export async function getBalances(providerOrPrivy: any, address: string): Promis
       // EIP-1193 provider (e.g., window.ethereum from MetaMask/Rainbow)
       // Use RPC URL for read-only operations to avoid account rejection
       provider = new JsonRpcProvider(RPC_URL);
-      providerDebugInfo = 'RPC URL (read-only for MetaMask-injected provider)';
+      providerDebugInfo = `RPC URL (read-only for MetaMask-injected provider) - Chain ${chainId}`;
     } else if (typeof providerOrPrivy === 'string') {
       // RPC URL
       provider = new JsonRpcProvider(providerOrPrivy);

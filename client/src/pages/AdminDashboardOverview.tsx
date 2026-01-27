@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAdminQuery, adminApiRequest } from "@/lib/adminApi";
 import AdminLayout from "@/components/AdminLayout";
+import { AdminUserWeeklyPointsPayout } from "@/components/AdminWeeklyPointsClaim";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -739,6 +740,9 @@ export default function AdminDashboardOverview() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Weekly Points Payout Section */}
+        <AdminUserWeeklyPointsPayout />
       </div>
 
       {/* Bonus Activation Modal */}

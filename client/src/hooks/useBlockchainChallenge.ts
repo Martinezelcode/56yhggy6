@@ -1,7 +1,8 @@
 import { usePrivy } from '@privy-io/react-auth';
 import { useToast } from '@/hooks/use-toast';
+import { useChain } from '@/hooks/useChain';
 import { ethers } from 'ethers';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const ERC20_ABI = [
   'function approve(address spender, uint256 amount) returns (bool)',
@@ -41,6 +42,7 @@ interface TransactionResult {
 export function useBlockchainChallenge() {
   const { user, ready, wallets } = usePrivy() as any;
   const { toast } = useToast();
+  const { setChainId: setAppChainId } = useChain();
   const [isRetrying, setIsRetrying] = useState(false);
   const [currentChainId, setCurrentChainId] = useState<number>(84532); // Default to Base Sepolia
 
@@ -69,6 +71,36 @@ export function useBlockchainChallenge() {
     },
   };
 
+  // Listen to wallet chain changes and update app state
+  useEffect(() => {
+    const ethProvider = (window as any).ethereum;
+    if (!ethProvider) return;
+
+    const handleChainChanged = (chainIdHex: string) => {
+      const newChainId = parseInt(chainIdHex, 16);
+      console.log(`🔗 Wallet chain changed to: ${newChainId}`);
+      setCurrentChainId(newChainId);
+      setAppChainId(newChainId as any);
+      
+      // Show a subtle notification
+      const chainConfig = CHAIN_CONFIGS[newChainId];
+      if (chainConfig) {
+        toast({
+          title: '🔗 Wallet Network Changed',
+          description: `Switched to ${chainConfig.name}`,
+        });
+      }
+    };
+
+    // Listen for chain change events
+    ethProvider.on('chainChanged', handleChainChanged);
+
+    // Cleanup
+    return () => {
+      ethProvider.removeListener('chainChanged', handleChainChanged);
+    };
+  }, []);
+
   const FACTORY_ADDRESS = CHAIN_CONFIGS[currentChainId]?.factoryAddress || '';
   const RPC_URL = CHAIN_CONFIGS[currentChainId]?.rpc || 'https://sepolia.base.org';
   const MAX_RETRIES = 3;
@@ -91,13 +123,40 @@ export function useBlockchainChallenge() {
     try {
       console.log(`🔄 SWITCHING WALLET TO ${chainConfig.name} (Chain ID: ${targetChainId})...`);
 
-      const ethProvider = (window as any).ethereum;
+      // Get the wallet
+      let wallet = null;
       
+      if (user?.wallet) {
+        console.log('🔍 Using connected external wallet from user.wallet');
+        wallet = user.wallet;
+      } else if (wallets && wallets.length > 0) {
+        console.log('🔍 Using wallets array (embedded wallets)');
+        const embeddedWallet = (wallets as any[]).find((w: any) => w.walletClientType === 'privy');
+        wallet = embeddedWallet || wallets[0];
+      }
+
+      if (!wallet) {
+        throw new Error('No wallet available. Please connect your wallet first.');
+      }
+
+      let ethProvider = null;
+
+      // Get the correct provider based on wallet type
+      if (wallet.walletClientType === 'privy') {
+        // For Privy embedded wallet, use the wallet's provider
+        ethProvider = (wallet as any).provider;
+        console.log('📱 Using Privy embedded wallet provider...');
+      } else {
+        // For external wallets, try window.ethereum first
+        ethProvider = (window as any).ethereum;
+        console.log('📱 Using external wallet provider (window.ethereum)...');
+      }
+
       if (!ethProvider) {
         throw new Error('No Web3 wallet detected. Please install MetaMask or connect a wallet.');
       }
 
-      console.log(`📱 Wallet provider found, sending switch request...`);
+      console.log(`📱 Wallet provider found, sending switch request to wallet...`);
 
       try {
         const result = await ethProvider.request({
@@ -105,7 +164,21 @@ export function useBlockchainChallenge() {
           params: [{ chainId: chainIdHex }],
         });
         console.log(`✅ Successfully switched to ${chainConfig.name}! Result:`, result);
+        
+        // Verify the switch worked by checking the current chain
+        const currentChainIdResult = await ethProvider.request({
+          method: 'eth_chainId',
+        });
+        console.log(`✅ Verified current chain ID: ${currentChainIdResult}`);
+        
+        // Update app state
         setCurrentChainId(targetChainId);
+        
+        // Show success toast
+        toast({
+          title: '✅ Network Switched',
+          description: `Connected to ${chainConfig.name}`,
+        });
         
       } catch (switchError: any) {
         console.log(`⚠️ Switch error code: ${switchError.code}`);
@@ -127,7 +200,21 @@ export function useBlockchainChallenge() {
           });
           
           console.log(`✅ Successfully added ${chainConfig.name} to wallet! Result:`, addResult);
+          
+          // Now try to switch again
+          console.log(`🔄 Now switching to newly added ${chainConfig.name}...`);
+          const switchResult = await ethProvider.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: chainIdHex }],
+          });
+          console.log(`✅ Successfully switched to ${chainConfig.name}!`);
+          
           setCurrentChainId(targetChainId);
+          
+          toast({
+            title: '✅ Network Added & Switched',
+            description: `Connected to ${chainConfig.name}`,
+          });
           
         } else if (switchError.code === 4001) {
           throw new Error('You rejected the network switch request. Please approve to continue.');
@@ -139,7 +226,7 @@ export function useBlockchainChallenge() {
     } catch (error: any) {
       console.error('❌ FAILED TO SWITCH NETWORK:', error);
       toast({
-        title: '🚨 Network Switch Required',
+        title: '🚨 Network Switch Failed',
         description: error.message || `Please switch your wallet to ${chainConfig.name} (Chain ID: ${targetChainId})`,
         variant: 'destructive',
       });
@@ -615,6 +702,7 @@ export function useBlockchainChallenge() {
   return {
     createP2PChallenge,
     acceptP2PChallenge,
+    switchChain,
     factoryAddress: FACTORY_ADDRESS,
     isRetrying,
   };

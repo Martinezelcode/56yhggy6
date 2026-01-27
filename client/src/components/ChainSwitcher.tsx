@@ -17,21 +17,26 @@ import {
 } from '@/components/ui/select';
 import { ChainId } from '@/config/chains';
 import { useToast } from '@/hooks/use-toast';
+import { useBlockchainChallenge } from '@/hooks/useBlockchainChallenge';
 
 export function ChainSwitcher() {
   const { toast } = useToast();
   const currentChainId = useChain((state) => state.currentChainId);
-  const { switchChain, supportedChains } = useChainSwitch();
+  const { supportedChains } = useChainSwitch();
+  const { switchChain: walletSwitchChain } = useBlockchainChallenge();
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleChainChange = async (newChainId: string) => {
     try {
       setIsLoading(true);
-      switchChain(parseInt(newChainId) as ChainId);
+      const chainId = parseInt(newChainId) as ChainId;
+      
+      // Switch the wallet's connected chain
+      await walletSwitchChain(chainId);
       
       toast({
         title: 'Network Switched',
-        description: `Switched to ${supportedChains.find(c => c.id === parseInt(newChainId))?.name}`,
+        description: `Switched to ${supportedChains.find(c => c.id === chainId)?.name}`,
       });
     } catch (error) {
       console.error('Failed to switch chain:', error);
@@ -79,15 +84,19 @@ export function ChainSwitcher() {
 export function ChainSwitcherCompact() {
   const { toast } = useToast();
   const currentChainId = useChain((state) => state.currentChainId);
-  const { switchChain, supportedChains } = useChainSwitch();
+  const { supportedChains } = useChainSwitch();
+  const { switchChain: walletSwitchChain } = useBlockchainChallenge();
 
   const handleChainChange = async (newChainId: string) => {
     try {
-      switchChain(parseInt(newChainId) as ChainId);
+      const chainId = parseInt(newChainId) as ChainId;
+      
+      // Switch the wallet's connected chain
+      await walletSwitchChain(chainId);
       
       toast({
         title: 'Network Switched',
-        description: `Now on ${supportedChains.find(c => c.id === parseInt(newChainId))?.shortName}`,
+        description: `Now on ${supportedChains.find(c => c.id === chainId)?.shortName}`,
       });
     } catch (error) {
       console.error('Failed to switch chain:', error);

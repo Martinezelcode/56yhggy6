@@ -1,5 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useChain } from "@/hooks/useChain";
+import { useBlockchainChallenge } from "@/hooks/useBlockchainChallenge";
 import React, { useMemo } from "react";
 import {
   Dialog,
@@ -66,20 +67,29 @@ export function Navigation() {
   const chainLogo = getChainLogo(chainId);
   const chainName = getChainName(chainId);
   const chainColor = getChainColor(chainId);
+  const { switchChain: walletSwitchChain } = useBlockchainChallenge();
 
   const { notifications, unreadCount } = useNotifications();
   const { hasProfileBadge } = useBadges();
   const { user: privyUser, getEmbeddedWallet } = usePrivy();
 
-  // Fetch ETH price from CoinGecko
-  const { data: ethPrice = 0 } = useQuery({
-    queryKey: ["eth-price"],
+  // Map chain IDs to their native token IDs on CoinGecko
+  const CHAIN_TOKEN_MAP: Record<number, string> = {
+    84532: 'ethereum',    // Base Sepolia uses ETH
+    80002: 'polygon',     // Polygon Amoy uses POL (formerly MATIC)
+    421614: 'ethereum',   // Arbitrum Sepolia uses ETH
+  };
+
+  // Fetch native token price from CoinGecko based on current chain
+  const { data: tokenPrice = 0 } = useQuery({
+    queryKey: ["token-price", chainId],
     queryFn: async () => {
+      const tokenId = CHAIN_TOKEN_MAP[chainId] || 'ethereum';
       const response = await fetch(
-        "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+        `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`
       );
       const data = await response.json();
-      return data.ethereum?.usd || 0;
+      return data[tokenId]?.usd || 0;
     },
     staleTime: 60000, // 1 minute
     retry: 1,
@@ -87,11 +97,11 @@ export function Navigation() {
 
   // Fetch wallet balance
   const { data: walletBalance = "0" } = useQuery({
-    queryKey: ["wallet-balance", user?.id],
+    queryKey: ["wallet-balance", user?.id, chainId],
     queryFn: async () => {
       if (!privyUser?.wallet?.address) return "0";
       try {
-        const balances = await getBalances(privyUser, privyUser.wallet.address);
+        const balances = await getBalances(privyUser, privyUser.wallet.address, chainId);
         return balances.nativeBalance || "0";
       } catch (error) {
         console.error("Failed to fetch wallet balance:", error);
@@ -105,9 +115,9 @@ export function Navigation() {
 
   // Calculate USD value from wallet balance
   const getUsdValue = () => {
-    if (!walletBalance || !ethPrice) return "$0.00";
-    const ethAmount = Number(walletBalance) / 1e18;
-    const usdValue = ethAmount * ethPrice;
+    if (!walletBalance || !tokenPrice) return "$0.00";
+    const tokenAmount = Number(walletBalance) / 1e18;
+    const usdValue = tokenAmount * tokenPrice;
     return `$${usdValue.toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -116,8 +126,8 @@ export function Navigation() {
 
   const getEthAmount = () => {
     if (!walletBalance) return "0";
-    const ethAmount = Number(walletBalance) / 1e18;
-    return ethAmount.toFixed(5);
+    const tokenAmount = Number(walletBalance) / 1e18;
+    return tokenAmount.toFixed(5);
   };
 
   const balance = getUsdValue();
@@ -126,6 +136,15 @@ export function Navigation() {
 
   const handleNavigation = (path: string) => {
     navigate(path);
+  };
+
+  const handleChainChange = async (newChainId: number) => {
+    try {
+      await walletSwitchChain(newChainId);
+    } catch (error) {
+      console.error('Failed to switch chain:', error);
+      // Error handling is done in the wallet switch function
+    }
   };
 
   const goToChallenges = () => {
@@ -346,27 +365,21 @@ export function Navigation() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
                       <DropdownMenuItem
-                        onClick={() => {
-                          useChain.getState().setChainId(84532);
-                        }}
+                        onClick={() => handleChainChange(84532)}
                         className="cursor-pointer flex items-center gap-2"
                       >
                         <img src="/assets/Base_logo.svg" alt="Base" className="w-4 h-4" />
                         Base Sepolia
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => {
-                          useChain.getState().setChainId(80002);
-                        }}
+                        onClick={() => handleChainChange(80002)}
                         className="cursor-pointer flex items-center gap-2"
                       >
                         <img src="/assets/polygonlogo.svg" alt="Polygon" className="w-4 h-4" />
                         Polygon Amoy
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => {
-                          useChain.getState().setChainId(421614);
-                        }}
+                        onClick={() => handleChainChange(421614)}
                         className="cursor-pointer flex items-center gap-2"
                       >
                         <img src="/assets/arbitrumlogo.svg" alt="Arbitrum" className="w-4 h-4" />
@@ -630,27 +643,21 @@ export function Navigation() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
                     <DropdownMenuItem
-                      onClick={() => {
-                        useChain.getState().setChainId(84532);
-                      }}
+                      onClick={() => handleChainChange(84532)}
                       className="cursor-pointer flex items-center gap-2"
                     >
                       <img src="/assets/Base_logo.svg" alt="Base" className="w-4 h-4" />
                       Base Sepolia
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => {
-                        useChain.getState().setChainId(80002);
-                      }}
+                      onClick={() => handleChainChange(80002)}
                       className="cursor-pointer flex items-center gap-2"
                     >
                       <img src="/assets/polygonlogo.svg" alt="Polygon" className="w-4 h-4" />
                       Polygon Amoy
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => {
-                        useChain.getState().setChainId(421614);
-                      }}
+                      onClick={() => handleChainChange(421614)}
                       className="cursor-pointer flex items-center gap-2"
                     >
                       <img src="/assets/arbitrumlogo.svg" alt="Arbitrum" className="w-4 h-4" />
