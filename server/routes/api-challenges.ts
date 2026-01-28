@@ -390,8 +390,25 @@ router.post('/create-p2p', PrivyAuthMiddleware, upload.single('coverImage'), asy
 
       console.log(`📬 Notification sent to opponent ${opponentId}`);
     } else {
-      // For open challenges: broadcast to relevant audience
-      console.log(`📢 Open challenge created - available for anyone to join`);
+      // For open challenges: send notification to creator that the challenge was created
+      await notificationService.send({
+        userId: userId,
+        challengeId: challengeId.toString(),
+        event: NotificationEvent.CHALLENGE_CREATED,
+        title: `✅ Challenge created!`,
+        body: `Your challenge is now live! Wait for others to see it and accept it.Goodluck!`,
+        channels: [NotificationChannel.IN_APP, NotificationChannel.PUSH],
+        priority: NotificationPriority.MEDIUM,
+        data: {
+          challengeId: challengeId,
+          title,
+          stakeAmount,
+        },
+      }).catch(err => {
+        console.warn('Failed to send open challenge notification:', err.message);
+      });
+
+      console.log(`📢 Open challenge notification sent to creator`);
     }
 
     // Broadcast to Telegram
