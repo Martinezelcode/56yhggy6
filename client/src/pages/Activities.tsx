@@ -115,10 +115,10 @@ export default function Activities() {
   });
 
   const { data: transactions = [], isLoading: transactionsLoading } = useQuery({
-    queryKey: ["/api/wallet/transactions"],
+    queryKey: ["/api/transactions"],
     queryFn: async () => {
       try {
-        const response = await fetch("/api/wallet/transactions", {
+        const response = await fetch("/api/transactions", {
           credentials: "include",
         });
         if (!response.ok) {
