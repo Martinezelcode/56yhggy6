@@ -91,7 +91,7 @@ async function generateChallengeSVG(challenge: ChallengeOGData): Promise<string>
         <!-- Amount -->
         <rect x="0" y="0" width="200" height="60" rx="10" fill="#fbbf24" opacity="0.1"/>
         <text x="20" y="25" font-family="Arial, sans-serif" font-size="14" fill="#92400e">STAKE</text>
-        <text x="20" y="45" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#92400e">₦${challenge.amount}</text>
+        <text x="20" y="45" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#92400e">$${challenge.amount}</text>
 
         <!-- Category -->
         <rect x="220" y="0" width="200" height="60" rx="10" fill="#3b82f6" opacity="0.1"/>
@@ -154,7 +154,7 @@ async function generateEventSVG(event: EventOGData): Promise<string> {
         <!-- Entry Fee -->
         <rect x="0" y="0" width="180" height="60" rx="10" fill="#f59e0b" opacity="0.1"/>
         <text x="20" y="25" font-family="Arial, sans-serif" font-size="14" fill="#92400e">ENTRY FEE</text>
-        <text x="20" y="45" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#92400e">₦${event.entryFee}</text>
+        <text x="20" y="45" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#92400e">$${event.entryFee}</text>
 
         <!-- Category -->
         <rect x="200" y="0" width="180" height="60" rx="10" fill="#3b82f6" opacity="0.1"/>

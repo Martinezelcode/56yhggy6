@@ -98,7 +98,7 @@ export function SmartSearch({
     if (result.type === "challenge") {
       return (
         <Badge variant="outline" className="text-xs">
-          ₦{result.amount?.toLocaleString() || 0}
+          ${result.amount?.toLocaleString() || 0}
         </Badge>
       );
     }

@@ -418,7 +418,7 @@ router.post('/create-p2p', PrivyAuthMiddleware, upload.single('coverImage'), asy
         title,
         description,
         amount: parseInt(stakeAmount),
-        category: category || 'general',
+        category: 'p2p', // P2P challenges are tagged as p2p category
         creator: {
           username: challenger[0]?.username || 'user',
           firstName: challenger[0]?.firstName,
@@ -437,7 +437,7 @@ router.post('/create-p2p', PrivyAuthMiddleware, upload.single('coverImage'), asy
       console.log(`\n🎁 Awarding ${creationPoints} Bantah Points to creator ${userId}...`);
       
       // Record the points transaction
-      await recordPointsTransaction({
+      const pointsResult = await recordPointsTransaction({
         userId,
         challengeId,
         transactionType: 'earned_challenge_creation',
@@ -445,21 +445,24 @@ router.post('/create-p2p', PrivyAuthMiddleware, upload.single('coverImage'), asy
         reason: `Created ${type} challenge: "${title}"`,
         blockchainTxHash: transactionHash || null,
       });
+      console.log(`✅ Points transaction recorded:`, pointsResult);
 
       // Send notification to creator about points earned
-      await notifyPointsEarnedCreation(
+      const notificationSent = await notifyPointsEarnedCreation(
         userId,
         challengeId,
         creationPoints,
         title || `Challenge #${challengeId}`
-      ).catch(err => {
-        console.warn('Failed to send creation points notification:', err.message);
-      });
-
-      console.log(`✅ Points awarded and notification sent to creator`);
+      );
+      
+      if (notificationSent) {
+        console.log(`✅ Points earned notification sent to creator`);
+      } else {
+        console.warn('⚠️ Points earned notification failed but points were recorded');
+      }
     } catch (pointsError: any) {
-      console.error('Failed to award creation points:', pointsError);
-      // Don't fail challenge creation if points awarding fails
+      console.error('❌ Failed to award creation points:', pointsError.message);
+      // Don't fail challenge creation if points awarding fails - points system is secondary
     }
 
     console.log(`\n✅✅✅ SUCCESS - Sending response to frontend`);
@@ -573,6 +576,36 @@ router.post('/:id/join', PrivyAuthMiddleware, async (req: Request, res: Response
     } catch (pointsError) {
       console.error('Failed to record participation points:', pointsError);
       // Don't fail the entire request if points recording fails
+    }
+
+    // Notify the challenge creator that someone joined their challenge (if it's an open challenge)
+    if (!challenge.challenged && challenge.challenger) {
+      try {
+        const joiner = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+        const joinerName = joiner[0]?.firstName || 'Someone';
+
+        await notificationService.send({
+          userId: challenge.challenger,
+          challengeId: challengeId.toString(),
+          event: NotificationEvent.CHALLENGE_JOINED_FRIEND,
+          title: `👤 ${joinerName} joined your challenge!`,
+          body: `${joinerName} has joined your open challenge: "${challenge.title}"`,
+          channels: [NotificationChannel.IN_APP, NotificationChannel.PUSH],
+          priority: NotificationPriority.MEDIUM,
+          data: {
+            challengeId: challengeId,
+            title: challenge.title,
+            joinerId: userId,
+            joinerName: joinerName,
+          },
+        }).catch(err => {
+          console.warn('Failed to notify creator that someone joined:', err.message);
+        });
+
+        console.log(`📬 Creator ${challenge.challenger} notified that ${joinerName} joined their challenge`);
+      } catch (err) {
+        console.error('Failed to send join notification to creator:', err);
+      }
     }
 
     console.log(`✅ User joined challenge: ${txResult.transactionHash}`);

@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
  * Get currency symbol from token address
  */
 export function getCurrencySymbol(tokenAddress?: string): string {
-  if (!tokenAddress) return "₦"; // fallback
+  if (!tokenAddress) return "$"; // fallback
 
   // Known token addresses
   const USDC_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b3566dA8860";

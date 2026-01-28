@@ -149,7 +149,7 @@ export default function AdminAnalytics() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Total Pool Value</p>
-                  <p className="text-2xl font-bold text-white">₦{(totalEventPool + totalChallengeStaked).toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-white">${(totalEventPool + totalChallengeStaked).toLocaleString()}</p>
                   <div className="flex items-center mt-1">
                     <TrendingUp className="w-4 h-4 text-blue-400 mr-1" />
                     <span className="text-xs text-blue-400">Events + Challenges</span>
@@ -198,7 +198,7 @@ export default function AdminAnalytics() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm text-green-400">₦{parseFloat(event.eventPool).toLocaleString()}</p>
+                      <p className="text-sm text-green-400">${parseFloat(event.eventPool).toLocaleString()}</p>
                       <Badge variant="outline" className="text-xs">
                         {event.status}
                       </Badge>
@@ -228,7 +228,7 @@ export default function AdminAnalytics() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm text-green-400">₦{parseFloat(challenge.amount).toLocaleString()}</p>
+                      <p className="text-sm text-green-400">${parseFloat(challenge.amount).toLocaleString()}</p>
                       <Badge variant="outline" className="text-xs">
                         {challenge.status}
                       </Badge>

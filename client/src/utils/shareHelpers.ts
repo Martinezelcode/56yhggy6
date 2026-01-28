@@ -23,28 +23,28 @@ export function withProfileSharing(userId: string, userName?: string) {
 export function getEventShareUrl(eventId: string | number): string {
   const baseUrl = typeof window !== 'undefined' 
     ? `${window.location.protocol}//${window.location.host}` 
-    : 'https://betchat.com';
+    : 'https://bantah.app';
   return `${baseUrl}/event/${eventId}`;
 }
 
 export function getChallengeShareUrl(challengeId: string | number): string {
   const baseUrl = typeof window !== 'undefined' 
     ? `${window.location.protocol}//${window.location.host}` 
-    : 'https://betchat.com';
+    : 'https://bantah.app';
   return `${baseUrl}/challenge/${challengeId}`;
 }
 
 export function getReferralShareUrl(referralCode: string): string {
   const baseUrl = typeof window !== 'undefined' 
     ? `${window.location.protocol}//${window.location.host}` 
-    : 'https://betchat.com';
+    : 'https://bantah.app';
   return `${baseUrl}/invite/${referralCode}`;
 }
 
 export function getProfileShareUrl(userId: string): string {
   const baseUrl = typeof window !== 'undefined' 
     ? `${window.location.protocol}//${window.location.host}` 
-    : 'https://betchat.com';
+    : 'https://bantah.app';
   return `${baseUrl}/profile/${userId}`;
 }
 

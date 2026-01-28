@@ -182,7 +182,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 </div>
                 <div>
                   <h1 className="text-lg font-semibold text-white">Admin Panel</h1>
-                  <p className="text-xs text-slate-400">BetChat Management</p>
+                  <p className="text-xs text-slate-400">Bantah Management</p>
                 </div>
               </div>
               <Button

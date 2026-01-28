@@ -446,7 +446,7 @@ export function NotificationCard({ notification, onMarkAsRead }: NotificationCar
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="challengeAmount" className="text-xs font-medium">Stake (₦)</Label>
+                <Label htmlFor="challengeAmount" className="text-xs font-medium">Stake ($)</Label>
                 <Input
                   id="challengeAmount"
                   type="number"

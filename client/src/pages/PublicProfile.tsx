@@ -142,7 +142,7 @@ export default function PublicProfile() {
           </div>
 
           <Button 
-            onClick={() => window.open(`https://betchat.com/@${profile.username}`, '_blank')}
+            onClick={() => window.open(`https://bantah.app/@${profile.username}`, '_blank')}
             size="sm"
             variant="outline"
             className="flex items-center gap-1"
@@ -216,7 +216,7 @@ export default function PublicProfile() {
                   </div>
 
                   <Button 
-                    onClick={() => window.open(`https://betchat.com/@${profile.username}`, '_blank')}
+                    onClick={() => window.open(`https://bantah.app/@${profile.username}`, '_blank')}
                     variant="outline"
                     className="mt-4 md:mt-0"
                   >

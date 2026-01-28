@@ -24,7 +24,7 @@ export default function MobileSplashScreen({ onComplete }: MobileSplashScreenPro
         <div className="mb-6">
           <img 
             src="/assets/bantahblue.svg" 
-            alt="BetChat Logo" 
+            alt="Bantah Logo" 
             className="w-24 h-24 mx-auto"
           />
         </div>

@@ -51,6 +51,9 @@ export default function WalletPage() {
   const [claimableChallenges, setClaimableChallenges] = useState<any[]>([]);
   const [claiming, setClaiming] = useState<boolean>(false);
   const [chartDays, setChartDays] = useState<7 | 30>(7);
+  
+  // Get current chain ID early to use in queries
+  const chainId = useChain((state) => state.currentChainId);
 
   // Helper function to calculate if user can claim points this week
   const canClaimPointsThisWeek = (lastClaimedAt: string | null): boolean => {
@@ -329,10 +332,8 @@ export default function WalletPage() {
     items.push(eth, usdc, usdt, pts);
     return items;
   };
-
   // Choose a single primary token to show: prefer native, then USDC, then USDT, then BPTS
   // Fetch on-chain balances for the primary wallet (Privy or other provider)
-  const chainId = useChain((state) => state.currentChainId);
   
   const { data: onchainBalances } = useQuery({
     queryKey: ["/onchain/balances", primaryWallet?.address, chainId],

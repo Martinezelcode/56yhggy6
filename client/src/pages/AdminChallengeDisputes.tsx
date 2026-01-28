@@ -343,7 +343,7 @@ export default function AdminChallengeDisputes() {
                             <p className="text-sm text-white font-semibold">{dispute.challengerUser.username}</p>
                           </div>
                           <div className="text-center">
-                            <p className="text-xs text-slate-400">VS Stake: ₦{parseFloat(dispute.amount).toLocaleString()}</p>
+                            <p className="text-xs text-slate-400">VS Stake: ${parseFloat(dispute.amount).toLocaleString()}</p>
                             <p className="text-sm font-bold text-blue-400">x2</p>
                           </div>
                           <div className="text-center">

@@ -161,7 +161,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onChatClick }) => {
 
   const formatCurrency = (
     amount: number,
-    symbol: string = "₦",
+    symbol: string = "$",
     compact: boolean = false,
   ) => {
     return formatBalance(amount);
@@ -235,7 +235,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onChatClick }) => {
             <div className="flex items-center gap-2 mt-1">
               <div className="bg-white rounded-2xl px-2 py-1">
                 <span className="text-black font-bold text-sm">
-                  {formatCurrency(event.pool?.total_amount || 0, "₦", true)}
+                  {formatCurrency(event.pool?.total_amount || 0, "$", true)}
                 </span>
               </div>
               {/* Participation Avatar + Count */}

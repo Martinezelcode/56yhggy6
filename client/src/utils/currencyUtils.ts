@@ -1,7 +1,7 @@
 
 export const formatCurrency = (amount: number, currency: string = 'NGN'): string => {
   const absAmount = Math.abs(amount);
-  const symbol = currency === 'NGN' ? '₦' : currency === 'USD' ? '$' : '€';
+  const symbol = currency === 'NGN' ? '$' : currency === 'USD' ? '$' : '€';
   
   if (absAmount >= 1000000) {
     const millions = absAmount / 1000000;

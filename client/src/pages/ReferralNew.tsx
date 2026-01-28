@@ -29,7 +29,7 @@ export default function ReferralNew() {
     enabled: !!user,
   });
 
-  // Get actual referral data from BetChat
+  // Get actual referral data from Bantah
   const currentUsername = (profileData as any)?.username || user?.username;
   const referralCode = user?.referralCode || currentUsername || `user_${user?.id?.slice(-8) || 'temp'}`;
   const referralUrl = `${window.location.origin}?ref=${referralCode}`;
@@ -49,7 +49,7 @@ export default function ReferralNew() {
   const totalReferrals = referralArray.length;
   const totalEarned = totalReferrals * 500; // 500 points per referral based on code
 
-  // BetChat actual rewards based on referral system
+  // Bantah actual rewards based on referral system
   const rewards = [
     {
       id: 1,

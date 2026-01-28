@@ -78,7 +78,7 @@ export default function AdminLogin() {
             Admin Access
           </h1>
           <p className="text-slate-400">
-            Secure login for BetChat administrators
+            Secure login for Bantah administrators
           </p>
         </div>
 
@@ -168,7 +168,7 @@ export default function AdminLogin() {
         {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-slate-500 text-sm">
-            BetChat Admin Portal © 2024
+            Bantah Admin Portal © 2024
           </p>
         </div>
       </div>

@@ -43,8 +43,8 @@ class TelegramBot {
     const baseInfo = `
 🎯 <b>New Challenge: ${challenge.title}</b>
 
-💰 <b>Amount:</b> ${challenge.amount} USDC
-🏷️ <b>Category:</b> ${challenge.category}
+💰 <b>Amount:</b> $${challenge.amount.toFixed(2)}
+🏷️ <b>Category:</b> ${challenge.category || 'General'}
 📝 <b>Type:</b> ${challenge.challengeType === 'admin' ? 'Betting Pool' : challenge.challengeType === 'direct' ? 'Direct Challenge' : 'Open Challenge'}
 ⏱️ <b>Expires in:</b> ${challenge.expirationHours || 24} hours
 ${challenge.description ? `\n📄 <b>Details:</b> ${challenge.description}` : ''}
@@ -63,27 +63,38 @@ ${challenge.description ? `\n📄 <b>Details:</b> ${challenge.description}` : ''
    */
   async broadcastChallenge(challenge: ChallengeMessage): Promise<boolean> {
     if (!this.isConfigured()) {
-      console.warn('Telegram bot not configured');
+      console.warn('⚠️ Telegram bot not configured - skipping broadcast');
       return false;
     }
 
     try {
       const message = this.formatChallengeMessage(challenge);
+      console.log(`📨 Broadcasting challenge to Telegram: "${challenge.title}"`);
       
       // Send to channel if configured
       if (this.channelId) {
-        await this.sendMessage(this.channelId, message);
+        try {
+          await this.sendMessage(this.channelId, message);
+          console.log(`✅ Broadcast sent to channel: ${this.channelId}`);
+        } catch (channelError) {
+          console.error(`❌ Failed to broadcast to channel ${this.channelId}:`, channelError);
+        }
       }
 
       // Send to group if configured and not already sent to same ID
       if (this.groupId && this.groupId !== this.channelId) {
-        await this.sendMessage(this.groupId, message);
+        try {
+          await this.sendMessage(this.groupId, message);
+          console.log(`✅ Broadcast sent to group: ${this.groupId}`);
+        } catch (groupError) {
+          console.error(`❌ Failed to broadcast to group ${this.groupId}:`, groupError);
+        }
       }
 
       console.log(`✅ Challenge broadcast to Telegram: ${challenge.title}`);
       return true;
     } catch (error) {
-      console.error('Failed to broadcast challenge to Telegram:', error);
+      console.error('❌ Failed to broadcast challenge to Telegram:', error);
       return false;
     }
   }
@@ -93,6 +104,7 @@ ${challenge.description ? `\n📄 <b>Details:</b> ${challenge.description}` : ''
    */
   private async sendMessage(chatId: string, message: string): Promise<void> {
     try {
+      console.log(`📤 Sending message to Telegram chat: ${chatId}`);
       const response = await fetch(`https://api.telegram.org/bot${this.token}/sendMessage`, {
         method: 'POST',
         headers: {
@@ -108,10 +120,14 @@ ${challenge.description ? `\n📄 <b>Details:</b> ${challenge.description}` : ''
 
       if (!response.ok) {
         const error = await response.json();
+        console.error(`❌ Telegram API error for chat ${chatId}:`, error);
         throw new Error(`Telegram API error: ${JSON.stringify(error)}`);
       }
+
+      const result = await response.json();
+      console.log(`✅ Message sent successfully to ${chatId}: message_id=${result.result.message_id}`);
     } catch (error) {
-      console.error(`Error sending message to Telegram chat ${chatId}:`, error);
+      console.error(`❌ Error sending message to Telegram chat ${chatId}:`, error);
       throw error;
     }
   }

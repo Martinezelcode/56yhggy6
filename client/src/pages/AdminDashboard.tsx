@@ -174,7 +174,7 @@ export default function AdminDashboard() {
               <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400">Total Pool</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900 dark:text-slate-100">₦{totalEventPool.toLocaleString()}</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-slate-100">${totalEventPool.toLocaleString()}</div>
             </CardContent>
           </Card>
         </div>
@@ -194,7 +194,7 @@ export default function AdminDashboard() {
                     <div className="flex-1">
                       <h3 className="font-semibold text-slate-900 dark:text-slate-100">{event.title}</h3>
                       <p className="text-sm text-slate-600 dark:text-slate-400">
-                        Pool: ₦{parseFloat(event.eventPool).toLocaleString()} • 
+                        Pool: ${parseFloat(event.eventPool).toLocaleString()} • 
                         Ended: {formatDistanceToNow(new Date(event.endDate), { addSuffix: true })}
                       </p>
                     </div>
@@ -240,13 +240,13 @@ export default function AdminDashboard() {
                       </div>
                       <div className="text-sm text-slate-600 dark:text-slate-400">
                         <span>Category: {event.category}</span> • 
-                        <span>Pool: ₦{parseFloat(event.eventPool).toLocaleString()}</span> • 
-                        <span>Fee: ₦{parseFloat(event.entryFee).toLocaleString()}</span> • 
+                        <span>Pool: ${parseFloat(event.eventPool).toLocaleString()}</span> • 
+                        <span>Fee: ${parseFloat(event.entryFee).toLocaleString()}</span> • 
                         <span>Max: {event.maxParticipants} participants</span>
                       </div>
                       <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">
                         {event.status === 'completed' ? (
-                          <span>Result: {event.result ? 'YES' : 'NO'} • Creator fee: ₦{parseFloat(event.creatorFee || '0').toLocaleString()}</span>
+                          <span>Result: {event.result ? 'YES' : 'NO'} • Creator fee: ${parseFloat(event.creatorFee || '0').toLocaleString()}</span>
                         ) : (
                           <span>Ends: {formatDistanceToNow(new Date(event.endDate), { addSuffix: true })}</span>
                         )}
@@ -307,7 +307,7 @@ export default function AdminDashboard() {
                 </div>
                 <div>
                   <p className="text-sm text-slate-600 dark:text-slate-400">Entry Fee</p>
-                  <p className="font-medium">₦{parseFloat(selectedEvent.entryFee).toLocaleString()}</p>
+                  <p className="font-medium">${parseFloat(selectedEvent.entryFee).toLocaleString()}</p>
                 </div>
                 <div>
                   <p className="text-sm text-slate-600 dark:text-slate-400">Max Participants</p>
@@ -321,15 +321,15 @@ export default function AdminDashboard() {
                   <div className="grid grid-cols-3 gap-4">
                     <div>
                       <p className="text-sm text-slate-600 dark:text-slate-400">Total Pool</p>
-                      <p className="font-medium">₦{eventStats.totalPool.toLocaleString()}</p>
+                      <p className="font-medium">${eventStats.totalPool.toLocaleString()}</p>
                     </div>
                     <div>
                       <p className="text-sm text-slate-600 dark:text-slate-400">YES Pool</p>
-                      <p className="font-medium">₦{eventStats.yesPool.toLocaleString()}</p>
+                      <p className="font-medium">${eventStats.yesPool.toLocaleString()}</p>
                     </div>
                     <div>
                       <p className="text-sm text-slate-600 dark:text-slate-400">NO Pool</p>
-                      <p className="font-medium">₦{eventStats.noPool.toLocaleString()}</p>
+                      <p className="font-medium">${eventStats.noPool.toLocaleString()}</p>
                     </div>
                   </div>
                   <div className="mt-2">
@@ -365,10 +365,10 @@ export default function AdminDashboard() {
               <div>
                 <h3 className="font-semibold">{selectedEvent.title}</h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  Total Pool: ₦{parseFloat(selectedEvent.eventPool).toLocaleString()}
+                  Total Pool: ${parseFloat(selectedEvent.eventPool).toLocaleString()}
                 </p>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  Creator Fee (3%): ₦{(parseFloat(selectedEvent.eventPool) * 0.03).toLocaleString()}
+                  Creator Fee (3%): ${(parseFloat(selectedEvent.eventPool) * 0.03).toLocaleString()}
                 </p>
               </div>
 
@@ -399,7 +399,7 @@ export default function AdminDashboard() {
                 <ul className="list-disc list-inside space-y-1">
                   <li>Event status will be set to completed</li>
                   <li>Winners will receive their share of the pool</li>
-                  <li>Creator will receive 3% fee (₦{(parseFloat(selectedEvent.eventPool) * 0.03).toLocaleString()})</li>
+                  <li>Creator will receive 3% fee (${(parseFloat(selectedEvent.eventPool) * 0.03).toLocaleString()})</li>
                   <li>All participants will be notified</li>
                   <li>Transaction records will be created</li>
                 </ul>

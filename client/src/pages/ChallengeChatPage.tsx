@@ -230,7 +230,7 @@ export default function ChallengeChatPage() {
               <div className="text-white drop-shadow-lg text-[10px] sm:text-xs space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="bg-white/20 px-2 py-0.5 rounded-full capitalize">{challenge.category}</span>
-                  <span className="bg-white/20 px-2 py-0.5 rounded-full font-bold">₦{parseInt(challenge.amount).toLocaleString()}</span>
+                  <span className="bg-white/20 px-2 py-0.5 rounded-full font-bold">${parseInt(challenge.amount).toLocaleString()}</span>
                   <span className="bg-white/20 px-2 py-0.5 rounded-full capitalize">{challenge.status}</span>
                   <span className="bg-white/20 px-2 py-0.5 rounded-full">
                     {formatDistanceToNow(new Date(challenge.dueDate), { addSuffix: true })}

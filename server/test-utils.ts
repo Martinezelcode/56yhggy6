@@ -81,8 +81,8 @@ export class PaymentTestUtils {
       event: 'charge.success',
       data: {
         reference: reference || `test_${Date.now()}`,
-        amount: amount * 100, // Convert to kobo
-        currency: 'NGN',
+        amount: amount * 100, // Convert to cents
+        currency: 'USD',
         status: 'success',
         metadata: {
           userId,

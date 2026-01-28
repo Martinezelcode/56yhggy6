@@ -136,7 +136,7 @@ export default function AdminTransactions() {
                 <div>
                   <p className="text-slate-400 text-sm">Total Volume</p>
                   <p className="text-2xl font-bold text-white">
-                    ₦{stats.totalAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    ${stats.totalAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </p>
                   <p className="text-xs text-slate-500 mt-1">{filtered.length} transactions</p>
                 </div>
@@ -151,7 +151,7 @@ export default function AdminTransactions() {
                 <div>
                   <p className="text-slate-400 text-sm">Completed</p>
                   <p className="text-2xl font-bold text-green-400">
-                    ₦{stats.completedAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    ${stats.completedAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </p>
                 </div>
                 <TrendingUp className="w-8 h-8 text-green-400" />
@@ -165,7 +165,7 @@ export default function AdminTransactions() {
                 <div>
                   <p className="text-slate-400 text-sm">Pending</p>
                   <p className="text-2xl font-bold text-yellow-400">
-                    ₦{stats.pendingAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    ${stats.pendingAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </p>
                 </div>
                 <TrendingDown className="w-8 h-8 text-yellow-400" />
@@ -327,7 +327,7 @@ export default function AdminTransactions() {
                         </td>
                         <td className="p-3 text-slate-300">{getTypeIcon(t.type)}</td>
                         <td className="p-3 text-right text-white font-semibold">
-                          ₦{parseFloat(t.amount || '0').toLocaleString()}
+                          ${parseFloat(t.amount || '0').toLocaleString()}
                         </td>
                         <td className="p-3 text-center">
                           <Badge className={`${getStatusColor(t.status)} border`}>

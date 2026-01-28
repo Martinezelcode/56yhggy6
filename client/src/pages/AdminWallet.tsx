@@ -127,7 +127,7 @@ export default function AdminWallet() {
     onSuccess: (data) => {
       toast({ 
         title: '✅ Withdrawal Initiated', 
-        description: `₦${parseFloat(withdrawAmount).toLocaleString()} is pending to your bank account. ${data.note}`,
+        description: `$${parseFloat(withdrawAmount).toLocaleString()} is pending to your bank account. ${data.note}`,
       });
       setWithdrawAmount('');
       setShowWithdrawModal(false);
@@ -168,7 +168,7 @@ export default function AdminWallet() {
     if (wallet && amount > wallet.balance) {
       toast({ 
         title: 'Insufficient Balance', 
-        description: `You only have ₦${wallet.balance.toLocaleString()}`,
+        description: `You only have $${wallet.balance.toLocaleString()}`,
         variant: 'destructive'
       });
       return;
@@ -255,7 +255,7 @@ export default function AdminWallet() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">
-                ₦{wallet?.balance.toLocaleString() || '0'}
+                ${wallet?.balance.toLocaleString() || '0'}
               </div>
               <p className="text-xs text-slate-400 mt-1">Available funds</p>
             </CardContent>
@@ -271,7 +271,7 @@ export default function AdminWallet() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-blue-400">
-                ₦{wallet?.totalCommission.toLocaleString() || '0'}
+                ${wallet?.totalCommission.toLocaleString() || '0'}
               </div>
               <p className="text-xs text-slate-400 mt-1">Lifetime earnings</p>
             </CardContent>
@@ -287,7 +287,7 @@ export default function AdminWallet() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-purple-400">
-                ₦{wallet?.totalBonusesGiven.toLocaleString() || '0'}
+                ${wallet?.totalBonusesGiven.toLocaleString() || '0'}
               </div>
               <p className="text-xs text-slate-400 mt-1">Distributed to users</p>
             </CardContent>
@@ -394,7 +394,7 @@ export default function AdminWallet() {
                     </div>
                     <div className="text-right space-y-1">
                       <p className={`font-bold text-sm ${tx.type === 'fund_load' || tx.type === 'commission_earned' ? 'text-green-400' : 'text-orange-400'}`}>
-                        {tx.type === 'fund_load' || tx.type === 'commission_earned' ? '+' : '-'}₦{Math.abs(parseFloat(tx.amount)).toLocaleString()}
+                        {tx.type === 'fund_load' || tx.type === 'commission_earned' ? '+' : '-'}${Math.abs(parseFloat(tx.amount)).toLocaleString()}
                       </p>
                       {getStatusBadge(tx.status)}
                     </div>
@@ -415,7 +415,7 @@ export default function AdminWallet() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-300 mb-2">Amount (₦)</label>
+                <label className="block text-sm text-slate-300 mb-2">Amount ($)</label>
                 <Input
                   type="number"
                   placeholder="Enter amount"
@@ -458,7 +458,7 @@ export default function AdminWallet() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-300 mb-2">Amount (₦)</label>
+                <label className="block text-sm text-slate-300 mb-2">Amount ($)</label>
                 <Input
                   type="number"
                   placeholder="Enter amount"
@@ -469,7 +469,7 @@ export default function AdminWallet() {
                   max={wallet?.balance}
                 />
                 <p className="text-xs text-slate-400 mt-1">
-                  Available: ₦{wallet?.balance.toLocaleString() || '0'}
+                  Available: ${wallet?.balance.toLocaleString() || '0'}
                 </p>
               </div>
               <div className="bg-slate-700/50 p-3 rounded text-sm text-slate-300 space-y-2">

@@ -324,7 +324,7 @@ export default function AdminPayouts() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Total Volume</p>
-                  <p className="text-2xl font-bold text-white">₦{(totalEventPool + totalChallengeStaked).toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-white">${(totalEventPool + totalChallengeStaked).toLocaleString()}</p>
                   <p className="text-xs text-blue-400">All-time</p>
                 </div>
                 <DollarSign className="w-8 h-8 text-green-400" />
@@ -337,7 +337,7 @@ export default function AdminPayouts() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Creator Fees</p>
-                  <p className="text-2xl font-bold text-white">₦{totalCreatorFees.toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-white">${totalCreatorFees.toLocaleString()}</p>
                   <p className="text-xs text-green-400">3% of event pools</p>
                 </div>
                 <TrendingUp className="w-8 h-8 text-blue-400" />
@@ -350,7 +350,7 @@ export default function AdminPayouts() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Platform Fees</p>
-                  <p className="text-2xl font-bold text-white">₦{totalPlatformFees.toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-white">${totalPlatformFees.toLocaleString()}</p>
                   <p className="text-xs text-purple-400">5% of challenge pools</p>
                 </div>
                 <Target className="w-8 h-8 text-purple-400" />
@@ -363,7 +363,7 @@ export default function AdminPayouts() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Total Revenue</p>
-                  <p className="text-2xl font-bold text-white">₦{(totalCreatorFees + totalPlatformFees).toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-white">${(totalCreatorFees + totalPlatformFees).toLocaleString()}</p>
                   <p className="text-xs text-green-400">Platform profit</p>
                 </div>
                 <CheckCircle className="w-8 h-8 text-green-400" />
@@ -448,14 +448,14 @@ export default function AdminPayouts() {
                             </Badge>
                           </td>
                           <td className="p-3 text-slate-300">
-                            <div>₦{parseFloat(event.eventPool).toLocaleString()}</div>
+                            <div>${parseFloat(event.eventPool).toLocaleString()}</div>
                             <div className="text-xs text-slate-500">
-                              YES: ₦{parseFloat(event.yesPool).toLocaleString()} | 
-                              NO: ₦{parseFloat(event.noPool).toLocaleString()}
+                              YES: ${parseFloat(event.yesPool).toLocaleString()} | 
+                              NO: ${parseFloat(event.noPool).toLocaleString()}
                             </div>
                           </td>
                           <td className="p-3 text-green-400">
-                            ₦{parseFloat(event.creatorFee).toLocaleString()}
+                            ${parseFloat(event.creatorFee).toLocaleString()}
                           </td>
                           <td className="p-3">
                             {event.adminResult === null ? (

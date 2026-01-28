@@ -69,7 +69,7 @@ export class NotificationService {
     challengeId: number;
   }): Promise<void> {
     const title = `🎯 Challenge Received!`;
-    const body = `${challengeData.challengerName} challenged you to "${challengeData.challengeTitle}" for ₦${challengeData.amount.toLocaleString()}`;
+    const body = `${challengeData.challengerName} challenged you to "${challengeData.challengeTitle}" for $${challengeData.amount.toLocaleString()}`;
     
     await this.showNotification(title, {
       body,

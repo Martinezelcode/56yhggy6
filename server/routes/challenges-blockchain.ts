@@ -16,10 +16,13 @@ import {
   getChallengeParticipants 
 } from '../blockchain/helpers';
 import { db } from '../db';
-import { challenges } from '../../shared/schema';
+import { challenges, users } from '../../shared/schema';
 import { eq } from 'drizzle-orm';
+import { NotificationService, NotificationEvent, NotificationChannel, NotificationPriority } from '../notificationService';
+import { notifyPointsEarnedWin } from '../utils/bantahPointsNotifications';
 
 const router = Router();
+const notificationService = new NotificationService();
 
 /**
  * POST /api/admin/challenges/resolve-onchain
@@ -71,6 +74,14 @@ router.post(
 
       // Step 3: Update database to track blockchain settlement
       console.log(`💾 Updating database...`);
+      const dbChallenge = await db
+        .select()
+        .from(challenges)
+        .where(eq(challenges.id, challengeId))
+        .limit(1);
+
+      const challenge = dbChallenge[0];
+
       await db
         .update(challenges)
         .set({
@@ -82,6 +93,84 @@ router.post(
         })
         .where(eq(challenges.id, challengeId))
         .execute();
+
+      // Step 4: Send notifications to winner and loser
+      if (challenge) {
+        const winnerAddressLower = winner.toLowerCase();
+        const challengerAddressLower = challenge.challenger?.toLowerCase();
+        const challengedAddressLower = challenge.challenged?.toLowerCase();
+
+        // Determine if winner is challenger or challenged
+        const isWinnerChallenger = challengerAddressLower === winnerAddressLower;
+
+        // Get winner and loser user IDs
+        const winnerId = isWinnerChallenger ? challenge.challenger : challenge.challenged;
+        const loserId = isWinnerChallenger ? challenge.challenged : challenge.challenger;
+
+        // Get winner and loser names for notifications
+        const winnerUser = winnerId ? await db.select().from(users).where(eq(users.id, winnerId)).limit(1) : null;
+        const loserUser = loserId ? await db.select().from(users).where(eq(users.id, loserId)).limit(1) : null;
+
+        const winnerName = winnerUser?.[0]?.firstName || 'Winner';
+        const loserName = loserUser?.[0]?.firstName || 'Loser';
+        const challengeTitle = challenge.title || `Challenge #${challengeId}`;
+
+        // Send notification to winner
+        if (winnerId) {
+          try {
+            await notifyPointsEarnedWin(
+              winnerId,
+              challengeId,
+              pointsAwarded,
+              challengeTitle,
+              challenge.amount ? `+${challenge.amount}` : undefined
+            );
+            console.log(`🏆 Win notification sent to ${winnerName}`);
+          } catch (err) {
+            console.warn(`Failed to send win notification to ${winnerName}:`, err);
+          }
+
+          // Also send a general celebration notification
+          await notificationService.send({
+            userId: winnerId,
+            challengeId: challengeId.toString(),
+            event: NotificationEvent.CHALLENGE_COMPLETED,
+            title: `🏆 You Won!`,
+            body: `Congratulations! You won the challenge "${challengeTitle}" and earned ${pointsAwarded} Bantah Points!`,
+            channels: [NotificationChannel.IN_APP, NotificationChannel.PUSH],
+            priority: NotificationPriority.HIGH,
+            data: {
+              challengeId,
+              pointsAwarded,
+              challengeTitle,
+            },
+          }).catch(err => console.warn('Failed to send victory notification:', err));
+        }
+
+        // Send notification to loser
+        if (loserId) {
+          try {
+            await notificationService.send({
+              userId: loserId,
+              challengeId: challengeId.toString(),
+              event: NotificationEvent.CHALLENGE_COMPLETED,
+              title: `😞 Challenge Lost`,
+              body: `You lost the challenge "${challengeTitle}" against ${winnerName}. Better luck next time!`,
+              channels: [NotificationChannel.IN_APP],
+              priority: NotificationPriority.MEDIUM,
+              data: {
+                challengeId,
+                challengeTitle,
+                winner: winnerName,
+              },
+            }).catch(err => console.warn('Failed to send loss notification:', err));
+
+            console.log(`😞 Loss notification sent to ${loserName}`);
+          } catch (err) {
+            console.warn(`Failed to send loss notification:`, err);
+          }
+        }
+      }
 
       res.json({
         success: true,

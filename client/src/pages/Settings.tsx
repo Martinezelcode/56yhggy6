@@ -472,7 +472,7 @@ export default function Settings() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="border-0 bg-white dark:bg-slate-800">
-                    <SelectItem value="NGN">NGN (₦)</SelectItem>
+                    <SelectItem value="NGN">NGN ($)</SelectItem>
                     <SelectItem value="USD">USD ($)</SelectItem>
                     <SelectItem value="EUR">EUR (€)</SelectItem>
                     <SelectItem value="GBP">GBP (£)</SelectItem>

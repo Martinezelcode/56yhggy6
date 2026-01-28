@@ -261,7 +261,7 @@ export default function AdminUsersManagement() {
                     </div>
                     <div className="text-center bg-green-900/30 px-3 py-2 rounded">
                       <p className="text-slate-400 text-xs">Wallet Balance</p>
-                      <p className="text-green-400 font-bold">₦{parseFloat(user.balance || '0').toLocaleString()}</p>
+                      <p className="text-green-400 font-bold">${parseFloat(user.balance || '0').toLocaleString()}</p>
                     </div>
                     <div className="text-center">
                       <p className="text-slate-400 text-xs">Streak</p>

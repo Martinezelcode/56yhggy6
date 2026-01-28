@@ -44,7 +44,7 @@ export async function generateEventOGMeta(eventId: string, baseUrl: string): Pro
 
     return {
       title: `${event.title} | Bantah`,
-      description: `🎲 EVENT: "${event.title}" - Join ${participants.length} participants predicting this ${event.category || 'prediction'} event. Entry: usdc${event.entryFee}`,
+      description: `🎲 EVENT: "${event.title}" - Join ${participants.length} participants predicting this ${event.category || 'prediction'} event. Entry: $${event.entryFee}`,
       image: `${baseUrl}/api/og/event/${eventId}`,
       url: `${baseUrl}/events/${eventId}`,
       type: 'article',
@@ -73,8 +73,8 @@ export async function generateChallengeOGMeta(challengeId: string, baseUrl: stri
                      challenge.status === 'completed' ? 'Completed Challenge' : 'Challenge';
 
     const description = challenged 
-      ? `${challenger?.firstName || 'Someone'} challenged ${challenged.firstName || 'someone'} with usdc${challenge.stakeAmount} at stake. ${challenge.description || ''}`.slice(0, 160)
-      : `${challenger?.firstName || 'Someone'} created an open challenge with usdc${challenge.stakeAmount} at stake. ${challenge.description || ''}`.slice(0, 160);
+      ? `${challenger?.firstName || 'Someone'} challenged ${challenged.firstName || 'someone'} with $${challenge.stakeAmount} at stake. ${challenge.description || ''}`.slice(0, 160)
+      : `${challenger?.firstName || 'Someone'} created an open challenge with $${challenge.stakeAmount} at stake. ${challenge.description || ''}`.slice(0, 160);
 
     return {
       title: `${statusText}: ${challenge.title} | Bantah`,

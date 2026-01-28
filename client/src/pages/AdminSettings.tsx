@@ -156,7 +156,7 @@ export default function AdminSettings() {
       });
       toast({
         title: "Success ✅",
-        description: `Added ₦${fundAmount} to event pool`,
+        description: `Added $${fundAmount} to event pool`,
       });
       setSelectedEventId('');
       setFundAmount('');
@@ -364,7 +364,7 @@ export default function AdminSettings() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label className="text-slate-300">Minimum Bet Amount (₦)</Label>
+                <Label className="text-slate-300">Minimum Bet Amount ($)</Label>
                 <Input
                   type="number"
                   value={settings.minBetAmount || 0}
@@ -373,7 +373,7 @@ export default function AdminSettings() {
                 />
               </div>
               <div>
-                <Label className="text-slate-300">Maximum Bet Amount (₦)</Label>
+                <Label className="text-slate-300">Maximum Bet Amount ($)</Label>
                 <Input
                   type="number"
                   value={settings.maxBetAmount || 0}
@@ -429,7 +429,7 @@ export default function AdminSettings() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label className="text-slate-300">Max Daily Withdrawal (₦)</Label>
+                <Label className="text-slate-300">Max Daily Withdrawal ($)</Label>
                 <Input
                   type="number"
                   value={settings.maxWithdrawalDaily || 0}
@@ -438,7 +438,7 @@ export default function AdminSettings() {
                 />
               </div>
               <div>
-                <Label className="text-slate-300">Max Daily Deposit (₦)</Label>
+                <Label className="text-slate-300">Max Daily Deposit ($)</Label>
                 <Input
                   type="number"
                   value={settings.maxDepositDaily || 0}
@@ -597,7 +597,7 @@ export default function AdminSettings() {
                   </SelectContent>
                 </Select>
                 <Input
-                  placeholder="Amount (₦)"
+                  placeholder="Amount ($)"
                   value={fundAmount}
                   onChange={(e) => setFundAmount(e.target.value)}
                   className="bg-slate-800 border-slate-700 max-w-[150px]"

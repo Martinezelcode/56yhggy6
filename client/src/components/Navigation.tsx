@@ -165,7 +165,7 @@ export function Navigation() {
   //             >
   //               <img
   //                 src="/assets/bantahblue.svg"
-  //                 alt="BetChat Logo"
+  //                 alt="Bantah Logo"
   //                 className="w-8 h-8"
   //               />
   //               <span className="text-xl font-bold text-slate-900 dark:text-white"></span>

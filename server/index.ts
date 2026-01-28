@@ -9,6 +9,7 @@ import fs from "fs";
 
 import { registerRoutes } from "./routes";
 import { startExpiryScheduler } from './jobs/expireChallenges';
+import { startChallengeExpiryReminderJob } from './jobs/challengeExpiryReminders';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -63,6 +64,11 @@ app.use((_req, res, next) => {
   }
 
   const port = Number(process.env.PORT || 5000);
+  
+  // Start background jobs
+  startExpiryScheduler();
+  startChallengeExpiryReminderJob();
+  
   server.listen(
     {
       port,

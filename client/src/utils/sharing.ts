@@ -12,7 +12,7 @@ const getBaseUrl = () => {
   if (typeof window !== 'undefined') {
     return `${window.location.protocol}//${window.location.host}`;
   }
-  return 'https://betchat.com'; // Fallback for SSR
+  return 'https://bantah.app'; // Fallback for SSR
 };
 
 // Event sharing functions
@@ -23,10 +23,10 @@ export function shareEvent(eventId: string, eventTitle: string, eventDescription
   return {
     shareUrl,
     shareData: {
-      title: `${eventTitle} | BetChat`,
-      description: eventDescription || `Join this prediction on BetChat! ${eventTitle}`,
+      title: `${eventTitle} | Bantah`,
+      description: eventDescription || `Join this prediction on Bantah! ${eventTitle}`,
       url: shareUrl,
-      hashtags: ['BetChat', 'Prediction', 'SocialBetting']
+      hashtags: ['Bantah', 'Prediction', 'SocialBetting']
     }
   };
 }
@@ -39,10 +39,10 @@ export function shareChallenge(challengeId: string, challengeTitle: string, stak
   return {
     shareUrl,
     shareData: {
-      title: `Challenge: ${challengeTitle} | BetChat`,
-      description: `Accept this challenge on BetChat! ${challengeTitle}${stakeAmount ? ` - ₦${stakeAmount} at stake` : ''}`,
+      title: `Challenge: ${challengeTitle} | Bantah`,
+      description: `Accept this challenge on Bantah! ${challengeTitle}${stakeAmount ? ` - $${stakeAmount} at stake` : ''}`,
       url: shareUrl,
-      hashtags: ['BetChat', 'Challenge', 'SocialBetting']
+      hashtags: ['Bantah', 'Challenge', 'SocialBetting']
     }
   };
 }
@@ -71,10 +71,10 @@ export function shareProfile(userId: string, userName?: string) {
   return {
     shareUrl,
     shareData: {
-      title: `${userName || 'User'} | BetChat Profile`,
-      description: `Check out ${userName || 'this user'}'s profile on BetChat! Join the social betting platform.`,
+      title: `${userName || 'User'} | Bantah Profile`,
+      description: `Check out ${userName || 'this user'}'s profile on Bantah! Join the social betting platform.`,
       url: shareUrl,
-      hashtags: ['BetChat', 'Profile', 'SocialBetting']
+      hashtags: ['Bantah', 'Profile', 'SocialBetting']
     }
   };
 }

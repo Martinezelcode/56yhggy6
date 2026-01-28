@@ -90,7 +90,7 @@ export default function AdminEventPayouts() {
     const creatorFee = totalPool * 0.03;
     const payoutPool = totalPool - creatorFee;
     
-    const confirmMessage = `Set event result to ${resultText}?\n\nPayout Details:\n- Total Pool: ₦${totalPool.toLocaleString()}\n- Creator Fee (3%): ₦${creatorFee.toLocaleString()}\n- Winner Payout: ₦${payoutPool.toLocaleString()}\n\nThis will trigger automatic payouts to all winners.`;
+    const confirmMessage = `Set event result to ${resultText}?\n\nPayout Details:\n- Total Pool: $${totalPool.toLocaleString()}\n- Creator Fee (3%): $${creatorFee.toLocaleString()}\n- Winner Payout: $${payoutPool.toLocaleString()}\n\nThis will trigger automatic payouts to all winners.`;
     
     if (confirm(confirmMessage)) {
       setResultMutation.mutate({ eventId, result });
@@ -167,7 +167,7 @@ export default function AdminEventPayouts() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Total Pool Value</p>
-                  <p className="text-2xl font-bold text-green-400">₦{totalPools.toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-green-400">${totalPools.toLocaleString()}</p>
                 </div>
                 <DollarSign className="w-8 h-8 text-green-400" />
               </div>
@@ -179,7 +179,7 @@ export default function AdminEventPayouts() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Creator Fees</p>
-                  <p className="text-2xl font-bold text-blue-400">₦{totalCreatorFees.toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-blue-400">${totalCreatorFees.toLocaleString()}</p>
                 </div>
                 <TrendingUp className="w-8 h-8 text-blue-400" />
               </div>
@@ -220,13 +220,13 @@ export default function AdminEventPayouts() {
                         </p>
                         <div className="flex items-center mt-2 space-x-4">
                           <span className="text-sm text-slate-300">
-                            Pool: ₦{parseFloat(event.eventPool).toLocaleString()}
+                            Pool: ${parseFloat(event.eventPool).toLocaleString()}
                           </span>
                           <span className="text-sm text-green-400">
-                            YES: ₦{parseFloat(event.yesPool).toLocaleString()}
+                            YES: ${parseFloat(event.yesPool).toLocaleString()}
                           </span>
                           <span className="text-sm text-red-400">
-                            NO: ₦{parseFloat(event.noPool).toLocaleString()}
+                            NO: ${parseFloat(event.noPool).toLocaleString()}
                           </span>
                         </div>
                       </div>
@@ -291,7 +291,7 @@ export default function AdminEventPayouts() {
                         </Badge>
                       </td>
                       <td className="p-3 text-slate-300">
-                        ₦{parseFloat(event.eventPool).toLocaleString()}
+                        ${parseFloat(event.eventPool).toLocaleString()}
                       </td>
                       <td className="p-3">
                         {event.adminResult === null ? (
@@ -369,19 +369,19 @@ export default function AdminEventPayouts() {
                   <div className="bg-slate-800 p-4 rounded-lg">
                     <div className="text-slate-400 text-sm">Total Pool</div>
                     <div className="text-xl font-bold text-white">
-                      ₦{selectedEventStats.totalPool.toLocaleString()}
+                      ${selectedEventStats.totalPool.toLocaleString()}
                     </div>
                   </div>
                   <div className="bg-slate-800 p-4 rounded-lg">
                     <div className="text-slate-400 text-sm">YES Pool</div>
                     <div className="text-xl font-bold text-green-400">
-                      ₦{selectedEventStats.yesPool.toLocaleString()}
+                      ${selectedEventStats.yesPool.toLocaleString()}
                     </div>
                   </div>
                   <div className="bg-slate-800 p-4 rounded-lg">
                     <div className="text-slate-400 text-sm">NO Pool</div>
                     <div className="text-xl font-bold text-red-400">
-                      ₦{selectedEventStats.noPool.toLocaleString()}
+                      ${selectedEventStats.noPool.toLocaleString()}
                     </div>
                   </div>
                   <div className="bg-slate-800 p-4 rounded-lg">

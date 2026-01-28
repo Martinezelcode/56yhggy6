@@ -206,7 +206,7 @@ export default function AdminBonusConfiguration() {
                 <div>
                   <p className="text-slate-400 text-sm">Total Distributed</p>
                   <p className="text-2xl font-bold text-yellow-400">
-                    ₦{activeBonuses.reduce((sum, b) => sum + (b.amount * b.usedCount), 0).toLocaleString()}
+                    ${activeBonuses.reduce((sum, b) => sum + (b.amount * b.usedCount), 0).toLocaleString()}
                   </p>
                 </div>
                 <Zap className="w-8 h-8 text-yellow-400" />
@@ -271,7 +271,7 @@ export default function AdminBonusConfiguration() {
                       name="amount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-slate-300">Base Amount (₦) *</FormLabel>
+                          <FormLabel className="text-slate-300">Base Amount ($) *</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
@@ -442,7 +442,7 @@ export default function AdminBonusConfiguration() {
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-800 p-3 rounded-lg">
                         <div>
                           <p className="text-xs text-slate-400">Amount</p>
-                          <p className="text-white font-semibold">₦{bonus.amount.toLocaleString()}</p>
+                          <p className="text-white font-semibold">${bonus.amount.toLocaleString()}</p>
                         </div>
                         <div>
                           <p className="text-xs text-slate-400">Multiplier</p>

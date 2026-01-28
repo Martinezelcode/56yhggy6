@@ -88,7 +88,7 @@ export function LiveChat() {
     if (!newMessage.trim() || !user) return;
 
     try {
-      // Send message via API (which handles both BetChat and Telegram sync)
+      // Send message via API (which handles both Bantah and Telegram sync)
       await apiRequest('/api/chat/messages', {
         method: 'POST',
         body: { message: newMessage.trim() }

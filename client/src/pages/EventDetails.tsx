@@ -289,7 +289,7 @@ export default function EventDetails() {
                 <Trophy className="w-4 h-4 text-slate-500" />
                 <div>
                   <p className="text-sm text-slate-500">Total Pool</p>
-                  <p className="font-medium">₦{totalPool.toLocaleString()}</p>
+                  <p className="font-medium">${totalPool.toLocaleString()}</p>
                 </div>
               </div>
               
@@ -314,7 +314,7 @@ export default function EventDetails() {
                       {yesPercentage.toFixed(1)}%
                     </p>
                     <p className="text-sm text-emerald-600 dark:text-emerald-400">
-                      ₦{parseFloat(event.yesPool).toLocaleString()}
+                      ${parseFloat(event.yesPool).toLocaleString()}
                     </p>
                   </div>
                 </CardContent>
@@ -328,7 +328,7 @@ export default function EventDetails() {
                       {noPercentage.toFixed(1)}%
                     </p>
                     <p className="text-sm text-red-600 dark:text-red-400">
-                      ₦{parseFloat(event.noPool).toLocaleString()}
+                      ${parseFloat(event.noPool).toLocaleString()}
                     </p>
                   </div>
                 </CardContent>

@@ -91,7 +91,7 @@ export default function AdminEscrow() {
   }, [escrowData?.challenges, searchQuery, sortBy]);
 
   const formatCurrency = (amount: number) => {
-    return `₦${amount.toLocaleString("en-US", {
+    return `$${amount.toLocaleString("en-US", {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     })}`;

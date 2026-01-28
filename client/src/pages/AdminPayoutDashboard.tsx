@@ -157,7 +157,7 @@ export default function AdminPayoutDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Total Pending</p>
-                  <p className="text-2xl font-bold text-red-400">₦{totalPending.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                  <p className="text-2xl font-bold text-red-400">${totalPending.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
                 </div>
                 <AlertCircle className="w-8 h-8 text-red-400" />
               </div>
@@ -181,7 +181,7 @@ export default function AdminPayoutDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Selected Amount</p>
-                  <p className="text-2xl font-bold text-blue-400">₦{selectedTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                  <p className="text-2xl font-bold text-blue-400">${selectedTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
                 </div>
                 <DollarSign className="w-8 h-8 text-blue-400" />
               </div>
@@ -312,7 +312,7 @@ export default function AdminPayoutDashboard() {
                               </Badge>
                               <span className="text-slate-300">{reason.sourceName}</span>
                             </div>
-                            <span className="text-green-400 font-semibold">+₦{reason.amount.toLocaleString()}</span>
+                            <span className="text-green-400 font-semibold">+${reason.amount.toLocaleString()}</span>
                           </div>
                         ))}
                       </div>
@@ -323,12 +323,12 @@ export default function AdminPayoutDashboard() {
                       <div>
                         <p className="text-slate-400 text-xs">Pending Payout</p>
                         <p className="text-2xl font-bold text-green-400">
-                          ₦{payout.pendingAmount.toLocaleString()}
+                          ${payout.pendingAmount.toLocaleString()}
                         </p>
                       </div>
                       <Button
                         onClick={() => {
-                          if (confirm(`Process ₦${payout.pendingAmount.toLocaleString()} payout to ${payout.username}?`)) {
+                          if (confirm(`Process $${payout.pendingAmount.toLocaleString()} payout to ${payout.username}?`)) {
                             processPayout.mutate({
                               userId: payout.userId,
                               amount: payout.pendingAmount,

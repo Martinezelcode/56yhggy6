@@ -196,7 +196,7 @@ export function PaymentTestPanel() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label className="text-sm font-medium">Test Amount (₦)</label>
+            <label className="text-sm font-medium">Test Amount ($)</label>
             <Input
               type="number"
               value={testAmount}

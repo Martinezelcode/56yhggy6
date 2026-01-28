@@ -297,7 +297,7 @@ export default function AdminChallengeCreate() {
                     name="amount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-slate-300">Stake Amount (₦) *</FormLabel>
+                        <FormLabel className="text-slate-300">Stake Amount ($) *</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
@@ -417,7 +417,7 @@ export default function AdminChallengeCreate() {
               </CardHeader>
               <CardContent>
                 <p className="text-xs text-slate-400">
-                  5% fee deducted from total winnings. Example: ₦2000 pool → ₦1900 to winner, ₦100 to platform.
+                  5% fee deducted from total winnings. Example: $2000 pool → $1900 to winner, $100 to platform.
                 </p>
               </CardContent>
             </Card>

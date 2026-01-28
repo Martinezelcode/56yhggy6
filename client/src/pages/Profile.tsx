@@ -89,7 +89,7 @@ export default function Profile() {
       : `${window.location.origin}/@${currentUsername}`;
     if (navigator.share) {
       navigator.share({
-        title: 'Check out my profile on BetChat',
+        title: 'Check out my profile on Bantah',
         url: shareUrl
       }).catch(() => {
         navigator.clipboard.writeText(shareUrl);

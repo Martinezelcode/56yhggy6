@@ -293,7 +293,7 @@ export default function AdminDashboardOverview() {
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-slate-400 text-xs">Total Volume</p>
-                  <p className="text-xl font-bold text-white">₦{((adminStats as any).totalVolume || 0).toLocaleString()}</p>
+                  <p className="text-xl font-bold text-white">${((adminStats as any).totalVolume || 0).toLocaleString()}</p>
                   <p className="text-[10px] text-blue-400">All-time trading</p>
                 </div>
                 <DollarSign className="w-6 h-6 text-green-400 flex-shrink-0" />
@@ -306,7 +306,7 @@ export default function AdminDashboardOverview() {
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-slate-400 text-xs">Platform Revenue</p>
-                  <p className="text-xl font-bold text-white">₦{((adminStats as any).totalRevenue || 0).toLocaleString()}</p>
+                  <p className="text-xl font-bold text-white">${((adminStats as any).totalRevenue || 0).toLocaleString()}</p>
                   <p className="text-[10px] text-purple-400">Creator + Platform fees</p>
                 </div>
                 <TrendingUp className="w-6 h-6 text-purple-400 flex-shrink-0" />
@@ -345,7 +345,7 @@ export default function AdminDashboardOverview() {
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-slate-400 text-xs">P2P Stakes</p>
-                  <p className="text-xl font-bold text-white">₦{((adminStats as any).totalChallengeStaked || 0).toLocaleString()}</p>
+                  <p className="text-xl font-bold text-white">${((adminStats as any).totalChallengeStaked || 0).toLocaleString()}</p>
                   <p className="text-[10px] text-pink-400">Staked in challenges</p>
                 </div>
                 <Zap className="w-6 h-6 text-pink-400 flex-shrink-0" />
@@ -399,7 +399,7 @@ export default function AdminDashboardOverview() {
                   <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0">
                       <p className="text-slate-400 text-xs">In Escrow</p>
-                      <p className="text-xl font-bold text-white">₦{(Number((escrowStats as any)?.holdingAmount) || 0).toLocaleString()}</p>
+                      <p className="text-xl font-bold text-white">${(Number((escrowStats as any)?.holdingAmount) || 0).toLocaleString()}</p>
                       <p className="text-[10px] text-amber-400">{Number((escrowStats as any)?.pendingChallenges) || 0} challenges</p>
                     </div>
                     <Lock className="w-6 h-6 text-amber-400 flex-shrink-0" />
@@ -412,7 +412,7 @@ export default function AdminDashboardOverview() {
                   <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0">
                       <p className="text-slate-400 text-xs">Escrow Paid Out</p>
-                      <p className="text-xl font-bold text-white">₦{(Number((escrowStats as any)?.releasedAmount) || 0).toLocaleString()}</p>
+                      <p className="text-xl font-bold text-white">${(Number((escrowStats as any)?.releasedAmount) || 0).toLocaleString()}</p>
                       <p className="text-[10px] text-green-400">Released to winners</p>
                     </div>
                     <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
@@ -502,7 +502,7 @@ export default function AdminDashboardOverview() {
                   </div>
                   <div className="bg-slate-800 p-3 rounded-lg text-center">
                     <p className="text-sm text-slate-400">Pool Value</p>
-                    <p className="text-lg font-bold text-white">₦{totalEventPool.toLocaleString()}</p>
+                    <p className="text-lg font-bold text-white">${totalEventPool.toLocaleString()}</p>
                   </div>
                 </div>
               </div>
@@ -537,7 +537,7 @@ export default function AdminDashboardOverview() {
                   </div>
                   <div className="bg-slate-800 p-3 rounded-lg text-center">
                     <p className="text-sm text-slate-400">Staked</p>
-                    <p className="text-lg font-bold text-white">₦{totalChallengeStaked.toLocaleString()}</p>
+                    <p className="text-lg font-bold text-white">${totalChallengeStaked.toLocaleString()}</p>
                   </div>
                 </div>
               </div>
@@ -595,11 +595,11 @@ export default function AdminDashboardOverview() {
                           <div className="grid grid-cols-3 gap-4 text-sm">
                             <div className="text-center">
                               <p className="text-slate-400">YES Stake</p>
-                              <p className="text-blue-400 font-medium">₦{(challenge.yesStakeTotal || 0).toLocaleString()}</p>
+                              <p className="text-blue-400 font-medium">${(challenge.yesStakeTotal || 0).toLocaleString()}</p>
                             </div>
                             <div className="text-center">
                               <p className="text-slate-400">NO Stake</p>
-                              <p className="text-red-400 font-medium">₦{(challenge.noStakeTotal || 0).toLocaleString()}</p>
+                              <p className="text-red-400 font-medium">${(challenge.noStakeTotal || 0).toLocaleString()}</p>
                             </div>
                             <div className="text-center">
                               <p className="text-slate-400">Imbalance</p>
@@ -730,11 +730,11 @@ export default function AdminDashboardOverview() {
                 </div>
                 <div className="bg-slate-800 p-3 rounded-lg">
                   <p className="text-slate-400 text-sm">Total Deposits</p>
-                  <p className="text-2xl font-bold text-green-400">₦{((adminStats as any).totalDeposits || 0).toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-green-400">${((adminStats as any).totalDeposits || 0).toLocaleString()}</p>
                 </div>
                 <div className="bg-slate-800 p-3 rounded-lg">
                   <p className="text-slate-400 text-sm">Total Withdrawals</p>
-                  <p className="text-2xl font-bold text-orange-400">₦{((adminStats as any).totalWithdrawals || 0).toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-orange-400">${((adminStats as any).totalWithdrawals || 0).toLocaleString()}</p>
                 </div>
               </div>
             </CardContent>
@@ -762,11 +762,11 @@ export default function AdminDashboardOverview() {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="text-slate-400">YES Stake</p>
-                    <p className="text-blue-400">₦{(selectedChallenge.yesStakeTotal || 0).toLocaleString()}</p>
+                    <p className="text-blue-400">${(selectedChallenge.yesStakeTotal || 0).toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="text-slate-400">NO Stake</p>
-                    <p className="text-red-400">₦{(selectedChallenge.noStakeTotal || 0).toLocaleString()}</p>
+                    <p className="text-red-400">${(selectedChallenge.noStakeTotal || 0).toLocaleString()}</p>
                   </div>
                 </div>
               </div>

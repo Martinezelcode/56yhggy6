@@ -765,7 +765,7 @@ export default function Activities() {
               </Select>
             </div>
             <div>
-              <Label htmlFor="editEntryFee">Entry Fee (₦)</Label>
+              <Label htmlFor="editEntryFee">Entry Fee ($)</Label>
               <Input
                 id="editEntryFee"
                 type="number"
@@ -840,7 +840,7 @@ export default function Activities() {
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="editChallengeAmount" className="text-sm font-medium">Stake Amount (₦)</Label>
+              <Label htmlFor="editChallengeAmount" className="text-sm font-medium">Stake Amount ($)</Label>
               <Input
                 id="editChallengeAmount"
                 type="number"

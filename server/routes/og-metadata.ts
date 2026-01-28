@@ -22,7 +22,7 @@ router.get('/og-metadata', async (req: Request, res: Response) => {
     // Fetch the webpage
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'BetChat-Bot/1.0 (+https://betchat.app)',
+        'User-Agent': 'Bantah-Bot/1.0 (+https://bantah.app)',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
       }
     });
