@@ -100,6 +100,7 @@ export default function Challenges() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [preSelectedUser, setPreSelectedUser] = useState<any>(null);
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
+  const [amountInput, setAmountInput] = useState('');
   const [createFormData, setCreateFormData] = useState({
     title: '',
     description: '',
@@ -368,10 +369,23 @@ export default function Challenges() {
       // Get the Privy auth token
       const token = await getAccessToken();
       
+      console.log(`\n🔐 About to call /api/challenges/create-p2p`);
+      console.log(`   Token received: ${token ? 'Yes' : 'No'}`);
+      console.log(`   Token (first 20 chars): ${token ? token.substring(0, 20) + '...' : 'NONE'}`);
+      
       const headers: Record<string, string> = {};
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
+        console.log(`   ✓ Authorization header will be sent`);
+      } else {
+        console.error(`   ❌ NO TOKEN - Request will likely fail with 401`);
       }
+
+      console.log(`   Sending request body with:`);
+      console.log(`     - title: ${requestBody.get('title')}`);
+      console.log(`     - stakeAmount: ${requestBody.get('stakeAmount')}`);
+      console.log(`     - paymentToken: ${requestBody.get('paymentToken')}`);
+      console.log(`     - transactionHash: ${requestBody.get('transactionHash')}`);
 
       const response = await fetch('/api/challenges/create-p2p', {
         method: 'POST',
@@ -407,11 +421,14 @@ export default function Challenges() {
       });
       queryClient.invalidateQueries({ queryKey: ["/api/challenges"] });
       setIsCreateDialogOpen(false);
+      setAmountInput('');
       setCreateFormData({ title: '', description: '', category: 'general', amount: 0, challengeType: 'open', opponentId: null, dueDate: '', paymentToken: 'ETH', side: 'YES', coverImage: null });
       setCoverImagePreview(null);
       setPreSelectedUser(null);
     },
     onError: (error: Error) => {
+      console.error('❌ Challenge creation failed:', error.message);
+      
       if (error.message.includes('401') || error.message.includes('Unauthorized')) {
         toast({
           title: "Unauthorized",
@@ -420,9 +437,11 @@ export default function Challenges() {
         });
         return;
       }
+      
+      // Show ALL errors, not just some
       toast({
-        title: "Error",
-        description: error.message || 'Failed to create challenge',
+        title: "Challenge Creation Failed",
+        description: error.message || 'Unknown error. Check browser console.',
         variant: "destructive",
       });
     },
@@ -804,25 +823,15 @@ export default function Challenges() {
               </Select>
 
               <Input
-                type="number"
-                step="0.000001"
-                min="0"
-                max="1000000"
-                placeholder={`Amount (${createFormData.paymentToken})`}
+                type="text"
+                inputMode="decimal"
                 className="rounded-md border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-1 focus:ring-[#ccff00] h-7 text-xs"
-                value={createFormData.amount === 0 ? '' : createFormData.amount}
+                value={amountInput}
                 onChange={(e) => {
                   const inputValue = e.target.value;
-                  // Allow empty string or any number input (validation happens on submit)
-                  if (inputValue === '') {
-                    setCreateFormData({ ...createFormData, amount: 0 });
-                  } else {
-                    const val = parseFloat(inputValue);
-                    // Allow any valid number to be set (including intermediate values like "0." or "0.0")
-                    if (!isNaN(val)) {
-                      setCreateFormData({ ...createFormData, amount: val });
-                    }
-                  }
+                  setAmountInput(inputValue);
+                  const val = parseFloat(inputValue);
+                  setCreateFormData({ ...createFormData, amount: isNaN(val) ? 0 : val });
                 }}
               />
             </div>

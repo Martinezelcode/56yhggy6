@@ -88,10 +88,55 @@ router.get('/public', async (req: Request, res: Response) => {
       c.status === 'open' || c.status === 'active' || c.status === 'completed' || c.status === 'pending'
     );
 
+    console.log(`📊 GET /api/challenges/public: ${publicChallenges.length} challenges found`);
     res.json(publicChallenges);
   } catch (error: any) {
     console.error('Error fetching public challenges:', error);
     res.status(500).json({ error: 'Failed to fetch challenges' });
+  }
+});
+
+/**
+ * GET /api/challenges/debug/status
+ * Debug endpoint to check database and API health
+ */
+router.get('/debug/status', async (req: Request, res: Response) => {
+  try {
+    const allChallenges = await db.select().from(challenges);
+    const statuses = allChallenges.reduce((acc: any, c) => {
+      acc[c.status] = (acc[c.status] || 0) + 1;
+      return acc;
+    }, {});
+
+    const activeCount = allChallenges.filter(c => 
+      c.status === 'open' || c.status === 'active' || c.status === 'completed' || c.status === 'pending'
+    ).length;
+
+    console.log(`\n🔍 Challenge Status Debug:`);
+    console.log(`   Total challenges in DB: ${allChallenges.length}`);
+    console.log(`   By status: ${JSON.stringify(statuses)}`);
+    console.log(`   Public challenges (displayed): ${activeCount}`);
+
+    res.json({
+      success: true,
+      total: allChallenges.length,
+      byStatus: statuses,
+      publicCount: activeCount,
+      recentChallenges: allChallenges
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0, 5)
+        .map(c => ({
+          id: c.id,
+          title: c.title,
+          status: c.status,
+          challenger: c.challenger,
+          createdAt: c.createdAt,
+          transactionHash: c.creatorTransactionHash
+        }))
+    });
+  } catch (error: any) {
+    console.error('Debug endpoint error:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -229,7 +274,13 @@ router.post('/create-p2p', PrivyAuthMiddleware, upload.single('coverImage'), asy
     const userId = req.user?.id || req.user?.sub || (req.user?.claims?.sub);
 
     console.log(`\n📨 POST /api/challenges/create-p2p`);
-    console.log(`  Transaction Hash: ${transactionHash}`);
+    console.log(`  ✓ Auth successful - userId: ${userId?.substring(0, 20)}...`);
+    console.log(`  ✓ Request received with:`);
+    console.log(`    - title: ${title}`);
+    console.log(`    - stakeAmount: ${stakeAmount}`);
+    console.log(`    - paymentToken: ${paymentToken}`);
+    console.log(`    - transactionHash: ${transactionHash?.substring(0, 10)}...`);
+    console.log(`    - challengeType: ${challengeType}`);
 
     if (!userId) {
       console.error('❌ User ID not found in request');
@@ -237,6 +288,7 @@ router.post('/create-p2p', PrivyAuthMiddleware, upload.single('coverImage'), asy
     }
 
     if (!stakeAmount || !paymentToken) {
+      console.error(`❌ Missing required fields: stakeAmount=${!!stakeAmount}, paymentToken=${!!paymentToken}`);
       return res.status(400).json({
         error: 'Missing required fields: stakeAmount, paymentToken',
       });
@@ -393,6 +445,11 @@ router.post('/create-p2p', PrivyAuthMiddleware, upload.single('coverImage'), asy
       // Don't fail challenge creation if points awarding fails
     }
 
+    console.log(`\n✅✅✅ SUCCESS - Sending response to frontend`);
+    console.log(`   challengeId: ${challengeId}`);
+    console.log(`   title: ${title}`);
+    console.log(`   pointsAwarded: ${creationPoints}`);
+    
     res.json({
       success: true,
       challengeId,
@@ -404,7 +461,8 @@ router.post('/create-p2p', PrivyAuthMiddleware, upload.single('coverImage'), asy
       message: `${type === 'open' ? 'Open' : 'Direct P2P'} challenge created. You earned ${creationPoints} Bantah Points!`,
     });
   } catch (error: any) {
-    console.error('Failed to create P2P challenge:', error);
+    console.error('❌ FAILED TO CREATE P2P CHALLENGE:', error.message);
+    console.error(`   Error stack:`, error.stack);
     res.status(500).json({
       error: 'Failed to create P2P challenge',
       message: error.message,

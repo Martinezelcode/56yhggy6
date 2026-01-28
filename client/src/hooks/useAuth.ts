@@ -97,5 +97,6 @@ export function useAuth() {
     login,
     logout,
     isLoggingOut: false,
+    getAccessToken,
   };
 }

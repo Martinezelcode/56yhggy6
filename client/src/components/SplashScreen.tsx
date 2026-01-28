@@ -24,11 +24,9 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
         <div className="mb-8">
           <img 
             src="/assets/bantahlogo.png" 
-            alt="BetChat" 
+            alt="BetChat Logo" 
             className="w-20 h-20 mx-auto mb-4 animate-pulse"
           />
-          <h1 className="text-primary text-2xl font-bold mb-2">Bantah</h1>
-          <p className="text-slate-600 text-sm">Predict • Chat • Win</p>
         </div>
 
         <div className="flex justify-center">
